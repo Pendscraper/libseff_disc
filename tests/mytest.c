@@ -56,7 +56,6 @@ int main(void) {
 		        		currentPlayer = nextPlayer(currentPlayer, forward);
 		        		break;
 		        	case DOUBLE:
-		        		// todo
 		        		break;
 		        	case ROTATE:
 		        		forward = !forward;
@@ -66,7 +65,7 @@ int main(void) {
 		        }
 		        currentPlayer = nextPlayer(currentPlayer, forward);
 		    });
-		    CASE_RETURN(request, { return *payload.result; });
+		    CASE_RETURN(request, { /* add killing the other players here*/return *payload.result; });
 		}
 	}
 }
