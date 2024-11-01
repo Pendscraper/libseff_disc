@@ -16,8 +16,8 @@ struct Setup {
 };
 
 void *turn(void *setup) {
-	int health = ((Setup)setup).health;
-	enum Item[10] items = ((Setup)setup).items;
+	int health = ((struct Setup)setup).health;
+	enum Item[10] items = ((struct Setup)setup).items;
 	for (int i = 0; i < 10; i++) {
 		if (items[i] == DOUBLE) {
 			health = health + 1;
@@ -25,9 +25,9 @@ void *turn(void *setup) {
 		PERFORM(end_turn, items[i]);
 	};
 	
-	hth = malloc(sizeof(int));
+	int *hth = malloc(sizeof(int));
 	hth[0] = health;
-	return hth;
+	return (void *)hth;
 }
 
 int nextPlayer(int current, bool forward) {
@@ -39,15 +39,15 @@ int nextPlayer(int current, bool forward) {
 }
 
 int main(void) {
-	seff_coroutine_t[PLAYER_COUNT] players;
+	seff_coroutine_t players[PLAYER_COUNT];
 	for (int i = 0; i < PLAYER_COUNT; i++) {
-		players[i] = seff_coroutine_new(turn, {2, {NONE, NONE, SKIP, DOUBLE, NONE, ROTATE, SKIP, ROTATE, DOUBLE, SKIP}}))
+		players[i] = seff_coroutine_new(turn, (struct Setup){2, {NONE, NONE, SKIP, DOUBLE, NONE, ROTATE, SKIP, ROTATE, DOUBLE, SKIP}}))
 	}
 	int currentPlayer = 0;
 	bool forward = true;
 	
 	while (true) {
-    		seff_request_t request = seff_resume(k, NULL, HANDLES(end_turn));
+    		seff_request_t request = seff_resume(&players[currentPlayer], NULL, HANDLES(end_turn));
     		switch (request.effect) {
     		
 		    CASE_EFFECT(request, end_turn, {
