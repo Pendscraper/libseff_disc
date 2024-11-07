@@ -46,7 +46,7 @@ int main(void) {
 	Setup default_setup = {2, {NONE, NONE, SKIP, DOUBLE, NONE, ROTATE, SKIP, ROTATE, DOUBLE, SKIP}};
 	for (int i = 0; i < PLAYER_COUNT; i++) {
 		players[i] = seff_coroutine_new(turn, &default_setup);
-	}
+	};
 	int currentPlayer = 0;
 	bool forward = true;
 	
@@ -70,6 +70,11 @@ int main(void) {
 		        currentPlayer = nextPlayer(currentPlayer, forward);
 		    });
 		    CASE_RETURN(request, {
+		    	for (int i = 0; i < PLAYER_COUNT; i++) {
+		    		if (i != currentPlayer) {
+		    			seff_coroutine_delete(players[i]);
+		    		};
+		    	};
 		    	/* add killing the other players here*/int *final = (int *)payload.result;
 		    	printf("fastest has %d health", *final);
 		    	free(final);
