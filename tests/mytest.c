@@ -68,6 +68,7 @@ int main(void) {
 		        		break;
 		        }
 		        currentPlayer = nextPlayer(currentPlayer, forward);
+			break;
 		    });
 		    CASE_RETURN(request, {
 		    	for (int i = 0; i < PLAYER_COUNT; i++) {
