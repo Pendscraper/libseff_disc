@@ -132,7 +132,7 @@ seff_coroutine_t *seff_locate_handler(effect_id effect) {
     effect_set mask = 1 << effect;
     seff_coroutine_t *k = _seff_current_coroutine;
     if (effect != EFF_ID(return)) {
-        // Thee special 'return' effect is implicitly handled by every coroutine
+        // The special 'return' effect is implicitly handled by every coroutine
         while (k && !(k->handled_effects & mask)) {
             k = (seff_coroutine_t *)k->parent_coroutine;
         }
