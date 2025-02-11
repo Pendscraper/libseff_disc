@@ -51,7 +51,7 @@ int main(void) {
 	bool forward = true;
 	
 	while (true) {
-    		seff_request_t request = seff_resume(players[currentPlayer], NULL, HANDLES(end_turn));
+    		seff_request_t request = seff_resume(players[currentPlayer], NULL, EFF_ID(end_turn));
     		switch (request.effect) {
     		
 		    CASE_EFFECT(request, end_turn, {
