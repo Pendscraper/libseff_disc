@@ -128,12 +128,20 @@ bool seff_coroutine_init_sized(
     return true;
 }
 
+bool _find_effect(effect_id effect, effect_set handled) {
+	for (int i = 0; i < MAX_EFFECTS_PER_HANDLER; i++) {
+		if (effect == handled[i]) {
+			return true;
+		}
+	}
+	return false;
+}
+
 seff_coroutine_t *seff_locate_handler(effect_id effect) {
-    effect_set mask = 1 << effect;
     seff_coroutine_t *k = _seff_current_coroutine;
     if (effect != EFF_ID(return)) {
         // The special 'return' effect is implicitly handled by every coroutine
-        while (k && !(k->handled_effects & mask)) {
+        while (k && !_find_effect(effect, k->handled_effects)) {
             k = (seff_coroutine_t *)k->parent_coroutine;
         }
     }
