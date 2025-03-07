@@ -24,7 +24,7 @@ void *bar(void *_child) {
     seff_coroutine_t *child = (seff_coroutine_t *)_child;
 
     char *response = NULL;
-    seff_request_t request = seff_resume(child, response, EFF_ID(get_name));
+    seff_request_t request = seff_resume(child, response, HANDLES(EFF_ID(get_name)));
     switch (request.effect) {
         CASE_EFFECT(request, get_name, {
             response = "bar1";
@@ -34,7 +34,7 @@ void *bar(void *_child) {
         assert(false);
     }
 
-    request = seff_resume(child, response, EFF_ID(get_name));
+    request = seff_resume(child, response, HANDLES(EFF_ID(get_name)));
     switch (request.effect) {
         CASE_EFFECT(request, get_name, {
             response = "bar2";
@@ -44,7 +44,7 @@ void *bar(void *_child) {
         assert(false);
     }
 
-    request = seff_resume(child, response, EFF_ID(get_name));
+    request = seff_resume(child, response, HANDLES(EFF_ID(get_name)));
     switch (request.effect) {
         CASE_EFFECT(request, get_name, {
             response = "bar3";
@@ -71,7 +71,7 @@ int main(void) {
     seff_coroutine_t *j = seff_coroutine_new(bar, k);
 
     while (1) {
-        request = seff_resume(j, NULL, EFF_ID(print));
+        request = seff_resume(j, NULL, HANDLES(EFF_ID(print)));
         if (j->state == FINISHED)
             break;
         switch (request.effect) {

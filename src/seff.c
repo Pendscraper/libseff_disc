@@ -33,7 +33,7 @@
 extern __thread seff_coroutine_t *_seff_current_coroutine;
 
 seff_request_t seff_resume_handling_all(seff_coroutine_t *k, void *arg) {
-    return seff_resume(k, arg, ~0);
+    return seff_resume(k, arg, ~0); // TODO
 }
 
 void frame_push(seff_cont_t *cont, void *elt) {

@@ -48,14 +48,14 @@ void *nested(void *args) {
 void *parent(void *args) {
     seff_coroutine_t *toplevel = seff_current_coroutine();
     seff_coroutine_t *child = seff_coroutine_new(nested, toplevel);
-    seff_resume(child, NULL, EFF_ID(read));
+    seff_resume(child, NULL, HANDLES(EFF_ID(read)));
 
     for (size_t i = 0; i < 3; i++) {
         bounce("parent");
         char i_str[2];
         i_str[0] = '0' + i;
         i_str[1] = 0;
-        seff_resume(child, i_str, EFF_ID(read));
+        seff_resume(child, i_str, HANDLES(EFF_ID(read)));
     }
 
     return NULL;
