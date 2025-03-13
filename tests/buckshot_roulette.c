@@ -10,7 +10,7 @@ typedef enum {
 	ROTATE
 } Item;
 
-DEFINE_EFFECT(end_turn, 0, void, { Item used; });
+DEFINE_EFFECT(end_turn, void, { Item used; });
 
 typedef struct {
 	int health;

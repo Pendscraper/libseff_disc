@@ -6,8 +6,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-DEFINE_EFFECT(get_name, 0, char *, {});
-DEFINE_EFFECT(print, 1, void, { char *str; });
+DEFINE_EFFECT(get_name, char *, {});
+DEFINE_EFFECT(print, void, { char *str; });
 
 void *foo(void *arg) {
     char str[128] = "Hello from ";

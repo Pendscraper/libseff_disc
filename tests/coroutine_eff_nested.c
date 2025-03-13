@@ -8,8 +8,8 @@
  * Effects: print, read
  */
 
-DEFINE_EFFECT(print, 0, void, { char *string; });
-DEFINE_EFFECT(read, 1, char *, {});
+DEFINE_EFFECT(print, void, { char *string; });
+DEFINE_EFFECT(read, char *, {});
 
 void bounce(const char *name) {
     const char *received_msg = PERFORM(read);

@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-DEFINE_EFFECT(put, 0, void, { int x; });
+DEFINE_EFFECT(put, void, { int x; });
 
 void *effectful(void *arg) {
     size_t iters = (size_t)arg;

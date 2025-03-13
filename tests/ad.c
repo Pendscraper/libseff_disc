@@ -6,12 +6,12 @@
 typedef enum { negate_op } op1_t;
 typedef enum { add_op, multiply_op } op2_t;
 
-DEFINE_EFFECT(e_ap0, 0, double *, { double value; });
-DEFINE_EFFECT(e_ap1, 1, double *, {
+DEFINE_EFFECT(e_ap0, double *, { double value; });
+DEFINE_EFFECT(e_ap1, double *, {
     op1_t op;
     double arg1;
 });
-DEFINE_EFFECT(e_ap2, 2, double *, {
+DEFINE_EFFECT(e_ap2, double *, {
     op2_t op;
     double arg1;
     double arg2;
@@ -29,12 +29,12 @@ double e_n(double x) { return *PERFORM(e_ap1, negate_op, x); }
 double e_a(double x, double y) { return *PERFORM(e_ap2, add_op, x, y); }
 double e_m(double x, double y) { return *PERFORM(e_ap2, multiply_op, x, y); }
 
-DEFINE_EFFECT(r_ap0, 3, prop_t *, { double value; });
-DEFINE_EFFECT(r_ap1, 4, prop_t *, {
+DEFINE_EFFECT(r_ap0, prop_t *, { double value; });
+DEFINE_EFFECT(r_ap1, prop_t *, {
     op1_t op;
     prop_t arg1;
 });
-DEFINE_EFFECT(r_ap2, 5, prop_t *, {
+DEFINE_EFFECT(r_ap2, prop_t *, {
     op2_t op;
     prop_t arg1;
     prop_t arg2;

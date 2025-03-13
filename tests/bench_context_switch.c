@@ -7,8 +7,8 @@
 #define GET 0
 #define PUT 1
 
-DEFINE_EFFECT(get, 0, int64_t, {});
-DEFINE_EFFECT(put, 1, void, { int64_t value; });
+DEFINE_EFFECT(get, int64_t, {});
+DEFINE_EFFECT(put, void, { int64_t value; });
 
 int64_t get(void) { return PERFORM(get); }
 void put(int64_t arg) { PERFORM(put, arg); }

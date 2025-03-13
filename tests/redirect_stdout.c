@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 
-DEFINE_EFFECT(print, 8, void, { const char *str; });
+DEFINE_EFFECT(print, void, { const char *str; });
 void print(const char *str) { PERFORM(print, str); }
 
 void *default_print(void *_arg) {

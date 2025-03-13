@@ -4,7 +4,7 @@
 #include <assert.h>
 #include <stdio.h>
 
-DEFINE_EFFECT(division_by_zero, 10, void, { int dividend; });
+DEFINE_EFFECT(division_by_zero, void, { int dividend; });
 
 int safe_division(int dividend, int divisor) {
     if (divisor == 0) {

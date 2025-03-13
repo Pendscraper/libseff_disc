@@ -43,21 +43,21 @@ typedef struct scheff_waker_t {
     task_t *task;
 } scheff_waker_t;
 
-DEFINE_EFFECT(fork, 0, void, {
+DEFINE_EFFECT(fork, void, {
     seff_start_fun_t *fn;
     void *arg;
 });
-DEFINE_EFFECT(poll, 1, void, {
+DEFINE_EFFECT(poll, void, {
     scheff_poll_condition_t *poll_condition;
     void *poll_arg;
 });
 
-DEFINE_EFFECT(sleep, 2, void, {
+DEFINE_EFFECT(sleep, void, {
     scheff_wakeup_manager_t *must_sleep;
     void *arg;
 });
 
-DEFINE_EFFECT(wake, 3, void, {
+DEFINE_EFFECT(wake, void, {
     size_t n_wakers;
     struct scheff_waker_t **wakers;
     bool resume;
