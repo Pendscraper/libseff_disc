@@ -102,6 +102,10 @@ E __attribute__((noreturn)) void seff_throw(effect_id eff_id, void *payload);
 #define EFF_RET_T(name) __##name##_eff_ret
 #define HANDLES(...) (effect_set){__VA_ARGS__}
 
+#define HANDLES_ALL (effect_set){ALL_EFFECT_ID}
+#define HANDLES_NONE (effect_set){0}
+
+
 #define CASE_EFFECT(request, name, block)                                      \
     case EFF_ID(name): {                                                       \
         EFF_PAYLOAD_T(name) payload = *(EFF_PAYLOAD_T(name) *)request.payload; \

@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 
-DEFINE_EFFECT(print, 0, void, { const char *str; });
+DEFINE_EFFECT(print, 8, void, { const char *str; });
 void print(const char *str) { PERFORM(print, str); }
 
 void *default_print(void *_arg) {
@@ -43,7 +43,7 @@ void *with_output_to_default(seff_start_fun_t *fn, void *arg) {
     seff_coroutine_t k;
     seff_coroutine_init(&k, fn, arg);
 
-    seff_request_t res = seff_resume(&k, NULL, 0);
+    seff_request_t res = seff_resume(&k, NULL, HANDLES_NONE);
     assert(res.effect == EFF_ID(return));
     return res.payload;
 }

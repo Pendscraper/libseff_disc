@@ -15,7 +15,10 @@ typedef uint64_t effect_set[16];
 
 typedef uint64_t effect_id;
 
+#define ALL_EFFECT_ID 0xFFFFFFFFFFFFFFFE
+
 #define RETURN_EFFECT_ID 0xFFFFFFFFFFFFFFFF
+
 
 typedef struct _seff_request_t {
     effect_id effect;

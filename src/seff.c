@@ -33,7 +33,7 @@
 extern __thread seff_coroutine_t *_seff_current_coroutine;
 
 seff_request_t seff_resume_handling_all(seff_coroutine_t *k, void *arg) {
-    return seff_resume(k, arg, ~0); // TODO
+    return seff_resume(k, arg, HANDLES_ALL);
 }
 
 void frame_push(seff_cont_t *cont, void *elt) {
@@ -129,6 +129,9 @@ bool seff_coroutine_init_sized(
 }
 
 bool _find_effect(effect_id effect, effect_set handled) {
+	if (handled[0] == ALL_EFFECT_ID) {
+		return true;
+	}
 	for (int i = 0; i < MAX_EFFECTS_PER_HANDLER; i++) {
 		if (effect == handled[i]) {
 			return true;
