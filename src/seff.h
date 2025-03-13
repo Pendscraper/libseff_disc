@@ -122,9 +122,20 @@ E __attribute__((noreturn)) void seff_throw(effect_id eff_id, void *payload);
         block                             \
     }
 
-#define DEFINE_EFFECT(name, id, ret_val, payload) \
-    typedef ret_val EFF_RET_T(name);              \
-    static const effect_id EFF_ID(name) = id;     \
+
+#ifdef EFF_ID_POLICY_COUNTER
+effect_id _id_counter_libseff_internal = 0;
+effect_id _get_new_id() {
+	return _id_counter_libseff_internal++
+}
+#endif
+
+#define DEFINE_EFFECT(name, ret_val, payload)          \
+    typedef ret_val EFF_RET_T(name);                       \
+    static effect_id EFF_ID(name) = EFF_ID_POLICY_SWITCH(         							\
+    														(effect_id) &EFF_ID(name);,     \
+    														_get_new_id(name);              \
+    													)  \
     typedef struct payload EFF_PAYLOAD_T(name)
 
 typedef void EFF_RET_T(return);
