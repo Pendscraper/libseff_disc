@@ -9,7 +9,7 @@ typedef struct {
     colour col;
 } chameneos_meet_t;
 
-DEFINE_EFFECT(meet, 21, chameneos_meet_t *, {
+DEFINE_EFFECT(meet, chameneos_meet_t *, {
     uint64_t self;
     colour msg;
 });

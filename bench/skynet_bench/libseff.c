@@ -5,7 +5,7 @@
 #include "seff.h"
 #include "skynet_common.h"
 
-DEFINE_EFFECT(yield_int, 1, void, { int64_t value; });
+DEFINE_EFFECT(yield_int, void, { int64_t value; });
 
 #define STACK_SIZE 256
 

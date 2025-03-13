@@ -2,8 +2,8 @@
 
 #include <stdio.h>
 
-DEFINE_EFFECT(put, 0, void, { int64_t value; });
-DEFINE_EFFECT(get, 1, int64_t, {});
+DEFINE_EFFECT(put, void, { int64_t value; });
+DEFINE_EFFECT(get, int64_t, {});
 
 void put(seff_coroutine_t *handler, int64_t number) { YIELD(handler, put, number); }
 int64_t get(seff_coroutine_t *handler) { return YIELD(handler, get); }

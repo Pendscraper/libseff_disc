@@ -47,12 +47,12 @@ typedef struct task_t {
     future_t *promise;
 } task_t;
 
-DEFINE_EFFECT(async, 2, void, {
+DEFINE_EFFECT(async, void, {
     seff_start_fun_t *fn;
     void *arg;
     future_t *promise;
 });
-DEFINE_EFFECT(await, 3, int64_t, { future_t *fut; });
+DEFINE_EFFECT(await, int64_t, { future_t *fut; });
 
 struct async_scheduler_t;
 typedef struct worker_thread_t {

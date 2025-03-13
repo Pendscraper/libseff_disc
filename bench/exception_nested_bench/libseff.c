@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-DEFINE_EFFECT(runtime_error, 10, void, { char *msg; });
+DEFINE_EFFECT(runtime_error, void, { char *msg; });
 
 #define MAX_DEPTH 100
 

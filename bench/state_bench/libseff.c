@@ -3,8 +3,8 @@
 
 #include <stdio.h>
 
-DEFINE_EFFECT(put, 0, void, { int64_t value; });
-DEFINE_EFFECT(get, 1, int64_t, {});
+DEFINE_EFFECT(put, void, { int64_t value; });
+DEFINE_EFFECT(get, int64_t, {});
 
 void put(int64_t number) { PERFORM(put, number); }
 int64_t get() { return PERFORM(get); }

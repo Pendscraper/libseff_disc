@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 
-DEFINE_EFFECT(yield_int, 1, void, { int64_t value; });
+DEFINE_EFFECT(yield_int, void, { int64_t value; });
 
 void __attribute__((optnone)) syscall(void) {
     // Call to free does not matter, it's just there to force allocate a big segment
