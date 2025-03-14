@@ -64,9 +64,15 @@ E __attribute__((no_split_stack)) void *seff_yield(
 // Performance difference is massive between seff_perform being inlined or not
 static inline void *seff_perform(effect_id eff_id, void *payload) {
     seff_coroutine_t *handler = seff_locate_handler(eff_id);
+		#ifdef le_test
+		puts("we are here");
+		#endif
     if (handler) {
         return seff_yield(handler, eff_id, payload);
     } else {
+		#ifdef le_test
+		puts("que");
+		#endif
         // Execute the handler in-place, since default handlers
         // are not allowed to pause the coroutine
         return seff_get_default_handler(eff_id)(payload);

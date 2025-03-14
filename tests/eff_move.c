@@ -1,3 +1,5 @@
+#define le_test
+
 #include "seff.h"
 #include "seff_types.h"
 #include <assert.h>
@@ -11,10 +13,13 @@ DEFINE_EFFECT(print, void, { char *str; });
 
 void *foo(void *arg) {
     char str[128] = "Hello from ";
+    puts("here");
 
     while (1) {
         char *back = str + sizeof("Hello from ") - 1;
+        puts("le loop 1");
         char *name = PERFORM(get_name);
+        puts("le loop 2");
         strcpy(back, name);
         PERFORM(print, str);
     }
@@ -62,8 +67,10 @@ void *bar(void *_child) {
 
 int main(void) {
     seff_coroutine_t *k = seff_coroutine_new(foo, NULL);
+    puts("yooo");
 
     seff_request_t request = seff_resume(k, NULL, HANDLES(EFF_ID(get_name), EFF_ID(print)));
+    puts("hiya");
     assert(request.effect == EFF_ID(get_name));
 
     char *main_name = "main";

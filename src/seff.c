@@ -128,7 +128,7 @@ bool seff_coroutine_init_sized(
     return true;
 }
 
-bool _find_effect(effect_id effect, effect_set handled) {
+static inline bool _find_effect(effect_id effect, effect_set handled) {
 	if (handled[0] == ALL_EFFECT_ID) {
 		return true;
 	}
@@ -141,6 +141,9 @@ bool _find_effect(effect_id effect, effect_set handled) {
 }
 
 seff_coroutine_t *seff_locate_handler(effect_id effect) {
+	#ifdef le_test
+	puts("tracking");
+	#endif
     seff_coroutine_t *k = _seff_current_coroutine;
     if (effect != EFF_ID(return)) {
         // The special 'return' effect is implicitly handled by every coroutine
