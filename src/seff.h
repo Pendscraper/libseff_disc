@@ -64,15 +64,9 @@ E __attribute__((no_split_stack)) void *seff_yield(
 // Performance difference is massive between seff_perform being inlined or not
 static inline void *seff_perform(effect_id eff_id, void *payload) {
     seff_coroutine_t *handler = seff_locate_handler(eff_id);
-		#ifdef le_test
-		puts("we are here");
-		#endif
     if (handler) {
         return seff_yield(handler, eff_id, payload);
     } else {
-		#ifdef le_test
-		puts("que");
-		#endif
         // Execute the handler in-place, since default handlers
         // are not allowed to pause the coroutine
         return seff_get_default_handler(eff_id)(payload);
@@ -106,10 +100,10 @@ E __attribute__((noreturn)) void seff_throw(effect_id eff_id, void *payload);
 #define EFF_ID(name) __##name##_eff_id
 #define EFF_PAYLOAD_T(name) __##name##_eff_payload
 #define EFF_RET_T(name) __##name##_eff_ret
-#define HANDLES(...) (effect_set){__VA_ARGS__}
+#define HANDLES(...) ({static uint64_t _ef[] = {__VA_ARGS__, 0}; (effect_set)_ef;})
 
-#define HANDLES_ALL (effect_set){ALL_EFFECT_ID}
-#define HANDLES_NONE (effect_set){0}
+#define HANDLES_ALL HANDLES(ALL_EFFECT_ID)
+#define HANDLES_NONE ({static uint64_t _ef[] = {0}; (effect_set)_ef;})
 
 #ifdef EFF_ID_POLICY_FIXED
 #define CASE_SWITCH(effect_id, block) switch(effect_id) {					   \

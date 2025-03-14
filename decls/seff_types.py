@@ -61,20 +61,18 @@ else:
     print(f'Fatal error: unsupported stack policy {stack_policy}')
 
 id_policy = args.effid_assign
-if stack_policy == id_stackref:
+if id_policy == id_stackref:
     Defn('EFF_ID_POLICY_STACKREF')
     Defn('EFF_ID_POLICY_SWITCH(stackref, counter)', 'stackref')
-elif stack_policy == id_counter:
+elif id_policy == id_counter:
     Defn('EFF_ID_POLICY_COUNTER')
     Defn('EFF_ID_POLICY_SWITCH(stackref, counter)', 'counter')
 else:
     print(f'Fatal error: unsupported effect ID generation policy {id_policy}')
 
 
-w_per_handler = 16
 max_effects = Defn('MAX_EFFECTS', arch.word_type.size * 8)
-max_effects = Defn('MAX_EFFECTS_PER_HANDLER', w_per_handler)
-effect_set = Typedef(f"effect_set[{w_per_handler}]", arch.word_type)
+effect_set = Typedef("effect_set", ptr(arch.word_type))
 effect_id = Typedef('effect_id', arch.word_type)
 
 Defn('RETURN_EFFECT_ID', '0xFFFFFFFFFFFFFFFF')

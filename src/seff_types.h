@@ -8,21 +8,19 @@
 
 #define STACK_POLICY_SWITCH(segmented, fixed, vmmem) segmented
 
-#define EFF_ID_POLICY_STACKREF
+#define EFF_ID_POLICY_STACKREF 
 
 #define EFF_ID_POLICY_SWITCH(stackref, counter) stackref
 
 #define MAX_EFFECTS 64
-#define MAX_EFFECTS_PER_HANDLER 16
 
-typedef uint64_t effect_set[16];
+typedef uint64_t *effect_set;
 
 typedef uint64_t effect_id;
 
-#define ALL_EFFECT_ID 0xFFFFFFFFFFFFFFFE
-
 #define RETURN_EFFECT_ID 0xFFFFFFFFFFFFFFFF
 
+#define ALL_EFFECT_ID 0xFFFFFFFFFFFFFFFE
 
 typedef struct _seff_request_t {
     effect_id effect;
