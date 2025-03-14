@@ -28,9 +28,12 @@ void *div_by_zero_crash(void *arg) {
 
 extern size_t default_frame_size;
 int main(void) {
+    puts("hi");
     seff_set_default_handler(EFF_ID(division_by_zero), div_by_zero_crash);
     seff_coroutine_t k;
     seff_coroutine_init(&k, safe_computation, NULL);
+    
+    puts("startup safe");
 
     seff_request_t exn = seff_resume(&k, NULL, HANDLES(EFF_ID(division_by_zero)));
     CASE_SWITCH(exn, {

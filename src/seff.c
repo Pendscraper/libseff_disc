@@ -24,6 +24,8 @@
 #include "seff.h"
 #include "seff_types.h"
 
+#include "hashmap_extern/hashmap.h"
+
 #ifndef NDEBUG
 #define DEBUG_INFO(fmt, ...) fprintf(stderr, fmt, ##__VA_ARGS__)
 #else
@@ -152,10 +154,23 @@ seff_coroutine_t *seff_locate_handler(effect_id effect) {
     return k;
 }
 
-void *unhandled_effect_handler(void *payload) { exit(-1); }
-default_handler_t *default_handlers[MAX_EFFECTS] = {unhandled_effect_handler};
+
+
+typedef struct _default_handler_entry {
+	effect_id effect;
+	default_handler_t *handler;
+} _default_handler_entry;
+
+static inline bool _iseq(void *a, void *b) {
+	_default_handler_entry first = (_default_handler_entry)a;
+	_default_handler_entry second = (_default_handler_entry)b;
+	return first -> effect == second -> effect;
+}
+
+struct hashmap *default_handlers = hashmap_new(sizeof(void *), 0, 0, 0, hashmap_sip, _iseq, NULL, NULL);
 
 default_handler_t *seff_set_default_handler(effect_id effect, default_handler_t *handler) {
+	hashmap_set(default_handlers, &(struct _default_handler_entry){ .effect=effect, .handler=handler });
     default_handler_t *prev = default_handlers[effect];
     default_handlers[effect] = handler;
     return prev;
