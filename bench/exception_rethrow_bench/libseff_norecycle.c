@@ -19,16 +19,17 @@ void *computation(void *_arg) {
     } else {
         seff_coroutine_t *k = seff_coroutine_new(computation, (void *)(depth - 1));
         seff_request_t exn = seff_resume(k, NULL, HANDLES(runtime_error));
-        switch (exn.effect) {
+        CASE_SWITCH(exn, {
             CASE_EFFECT(exn, runtime_error, {
                 caught++;
                 seff_coroutine_delete(k);
                 THROW(runtime_error, payload.msg);
                 break;
-            });
-        default:
-            assert(false);
-        }
+            })
+        	CASE_DEFAULT(
+            	assert(false);
+            )
+        })
     }
     return NULL;
 }
@@ -37,15 +38,15 @@ int main(void) {
     for (size_t i = 0; i < 100000; i++) {
         seff_coroutine_t *k = seff_coroutine_new(computation, (void *)(MAX_DEPTH - 1));
         seff_request_t exn = seff_resume(k, NULL, HANDLES(runtime_error));
-        switch (exn.effect) {
+        CASE_SWITCH(exn, {
             CASE_EFFECT(exn, runtime_error, {
                 caught++;
                 break;
-            });
-            break;
-        default:
-            assert(false);
-        }
+            })
+        	CASE_DEFAULT(
+            	assert(false);
+            )
+        })
         seff_coroutine_delete(k);
     }
     printf("Caught %lu exceptions\n", caught);

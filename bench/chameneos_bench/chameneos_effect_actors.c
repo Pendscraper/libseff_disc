@@ -35,8 +35,8 @@ void *chameneos_wrapper(struct actor_t *self) {
     // First resume, we assume it's not expecting anything
     seff_request_t mate = seff_resume(cham, (void *)NULL, HANDLES(meet));
     while (true) {
-        switch (mate.effect) {
-            CASE_EFFECT(mate, meet, {
+        CASE_SWITCH(mate, {
+            CASE_EFFECT(meet, {
                 //  send meet request
                 broker_message_t *msg = malloc(sizeof(broker_message_t));
                 msg->finish = false;
@@ -61,7 +61,7 @@ void *chameneos_wrapper(struct actor_t *self) {
                 mate = seff_resume(cham, (void *)&meetMsg, HANDLES(meet));
                 break;
             });
-            CASE_RETURN(mate, {
+            CASE_RETURN({
                 // send final counter and finish
                 broker_message_t *msg = malloc(sizeof(broker_message_t));
                 msg->finish = true;
@@ -70,9 +70,10 @@ void *chameneos_wrapper(struct actor_t *self) {
 
                 return NULL;
             });
-        default:
-            assert(false);
-        }
+		    CASE_DEFAULT(
+		        assert(false);
+           	)
+        })
     }
 }
 

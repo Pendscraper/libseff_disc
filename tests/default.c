@@ -33,14 +33,15 @@ int main(void) {
     seff_coroutine_init(&k, safe_computation, NULL);
 
     seff_request_t exn = seff_resume(&k, NULL, HANDLES(EFF_ID(division_by_zero)));
-    switch (exn.effect) {
-        CASE_EFFECT(exn, division_by_zero, {
+    CASE_SWITCH(exn, {
+        CASE_EFFECT(division_by_zero, {
             printf("Caught division (%d / 0) in coroutine, continuing main\n", payload.dividend);
             break;
         });
-    default:
-        assert(false);
-    }
+		CASE_DEFAULT(
+		    assert(false);
+        )
+    })
     seff_coroutine_release(&k);
     safe_division(100, 0);
     return 0;

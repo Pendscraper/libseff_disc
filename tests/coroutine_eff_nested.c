@@ -67,20 +67,21 @@ int main(void) {
     seff_request_t request = seff_resume(k, NULL, HANDLES(EFF_ID(print), EFF_ID(read)));
     while (!seff_finished(request)) {
         void *response;
-        switch (request.effect) {
-            CASE_EFFECT(request, print, {
+        CASE_SWITCH(request, {
+            CASE_EFFECT(print, {
                 puts(payload.string);
                 response = NULL;
                 break;
             });
-            CASE_EFFECT(request, read, {
+            CASE_EFFECT(read, {
                 response = "TOPLEVEL MESSAGE";
                 break;
             });
-        default:
-            assert(false);
-            exit(-1);
-        }
+		    CASE_DEFAULT(
+		        assert(false);
+		        exit(-1);
+            )
+        })
         request = seff_resume(k, response, HANDLES(EFF_ID(print), EFF_ID(read)));
     }
     seff_coroutine_delete(k);

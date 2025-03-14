@@ -60,15 +60,16 @@ int64_t bench(int n_workers, int depth) {
 
     seff_request_t eff = seff_resume(root, NULL, HANDLES(yield_int));
     while (true) {
-        switch (eff.effect) {
+        CASE_SWITCH(eff, {
             CASE_EFFECT(eff, yield_int, {
                 total += payload.value;
                 break;
-            });
-            CASE_RETURN(eff, { return total; });
-        default:
-            assert(false);
-        }
+            })
+            CASE_RETURN(eff, { return total; })
+		    CASE_DEFAULT(
+		        assert(false);
+		    )
+        })
         eff = seff_resume(root, NULL, HANDLES(yield_int));
     }
 

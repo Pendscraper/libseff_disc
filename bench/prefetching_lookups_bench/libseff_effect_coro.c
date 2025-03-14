@@ -38,8 +38,8 @@ long SeffEffectMultiLookup(
             int64_t *toRead = task.extra;
             seff_request_t request =
                 seff_resume(coro, toRead ? (void *)*toRead : NULL, HANDLES(deref));
-            switch (request.effect) {
-                CASE_RETURN(request, {
+            CASE_SWITCH(request, {
+                CASE_RETURN({
                     bool res = (bool)payload.result ? 1 : 0;
                     found_count += res;
                     not_found_count += 1 - res;
@@ -47,12 +47,12 @@ long SeffEffectMultiLookup(
                     limit++;
                     break;
                 });
-                CASE_EFFECT(request, deref, {
+                CASE_EFFECT(deref, {
                     prefetch_c((const char *)payload.addr);
                     coro_queue_enqueue(&q, (task_t){coro, (void *)payload.addr});
                     break;
                 });
-            }
+            })
         }
     }
 
@@ -63,8 +63,8 @@ long SeffEffectMultiLookup(
         int64_t *toRead = task.extra;
         seff_request_t request = seff_resume(coro, toRead ? (void *)*toRead : NULL, HANDLES(deref));
 
-        switch (request.effect) {
-            CASE_RETURN(request, {
+        CASE_SWITCH(request, {
+            CASE_RETURN({
                 bool res = (bool)payload.result ? 1 : 0;
                 found_count += res;
                 not_found_count += 1 - res;
@@ -72,12 +72,12 @@ long SeffEffectMultiLookup(
                 limit++;
                 break;
             });
-            CASE_EFFECT(request, deref, {
+            CASE_EFFECT(deref, {
                 prefetch_c((const char *)payload.addr);
                 coro_queue_enqueue(&q, (task_t){coro, (void *)payload.addr});
                 break;
             });
-        }
+        })
     }
 
     if (found_count + not_found_count != lookups_size)

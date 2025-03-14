@@ -33,12 +33,13 @@ int main(void) {
 
     for (size_t i = 0; i < 100000; i++) {
         seff_request_t exn = seff_resume(&k, NULL, HANDLES(runtime_error));
-        switch (exn.effect) {
-            CASE_EFFECT(exn, runtime_error, { caught++; });
-            break;
-        default:
-            assert(false);
-        }
+        CASE_SWITCH(exn, {
+            CASE_EFFECT(exn, runtime_error, { caught++; break;});
+            
+		    CASE_DEFAULT(
+		        assert(false);
+            )
+        })
         seff_coroutine_init_sized(&k, computation, (void *)(MAX_DEPTH - 1), 16 * KB);
     }
     seff_coroutine_release(&k);

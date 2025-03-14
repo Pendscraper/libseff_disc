@@ -20,15 +20,16 @@ void *computation(void *_arg) {
     } else {
         seff_coroutine_init(&children[depth], computation, (void *)(depth - 1));
         seff_request_t exn = seff_resume(&children[depth], NULL, HANDLES(runtime_error));
-        switch (exn.effect) {
-            CASE_EFFECT(exn, runtime_error, {
+        SWITCH_EFFECT(exn, {
+            CASE_EFFECT(runtime_error, {
                 caught++;
                 THROW(runtime_error, payload.msg);
                 break;
-            });
-        default:
-            assert(false);
-        }
+            })
+		    CASE_DEFAULT(
+		        assert(false);
+		    )
+        })
     }
     return NULL;
 }
@@ -42,15 +43,15 @@ int main(void) {
 
     for (size_t i = 0; i < 100000; i++) {
         seff_request_t exn = seff_resume(&k, NULL, HANDLES(runtime_error));
-        switch (exn.effect) {
+        SWITCH_EFFECT(exn, {
             CASE_EFFECT(exn, runtime_error, {
                 caught++;
                 break;
-            });
-            break;
-        default:
-            assert(false);
-        }
+            })
+        	CASE_DEFAULT(
+            	assert(false);
+            )
+        })
         seff_coroutine_init_sized(&k, computation, (void *)(MAX_DEPTH - 1), 16 * KB);
     }
     seff_coroutine_release(&k);

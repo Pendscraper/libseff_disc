@@ -18,15 +18,15 @@ void dummy(void) __attribute__((optnone)) { free(NULL); }
 
 void handle(seff_coroutine_t *k) {
     seff_request_t req = seff_resume(k, NULL, HANDLES(EFF_ID(put)));
-    switch (req.effect) {
-        CASE_EFFECT(req, put, {
+    CASE_SWITCH(req, {
+        CASE_EFFECT(put, {
             dummy();
             handle(k);
             dummy();
             break;
         });
-        CASE_RETURN(req, { return; });
-    }
+        CASE_RETURN({ return; });
+    })
 }
 
 int main(int argc, char **argv) {

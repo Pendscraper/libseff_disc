@@ -106,14 +106,14 @@ E __attribute__((noreturn)) void seff_throw(effect_id eff_id, void *payload);
 #define HANDLES_NONE (effect_set){0}
 
 #ifdef EFF_ID_POLICY_FIXED
-#define SWITCH_EFFECT(effect_id, block) switch(effect_id) {					   \
+#define CASE_SWITCH(effect_id, block) switch(effect_id) {					   \
 	block																	   \
 	}
-#define CASE_EFFECT(request, name, block)                                      \
-    case EFF_ID(name): {                                                       \
-        EFF_PAYLOAD_T(name) payload = *(EFF_PAYLOAD_T(name) *)request.payload; \
-        (void)payload;                                                         \
-        block                                                                  \
+#define CASE_EFFECT(request, name, block)										\
+    case EFF_ID(name): {														\
+        EFF_PAYLOAD_T(name) payload = *(EFF_PAYLOAD_T(name) *)request.payload; 	\
+        (void)payload;															\
+        block									    							\
     }
 #define CASE_RETURN(request, block)       \
     case EFF_ID(return): {                \
@@ -122,32 +122,35 @@ E __attribute__((noreturn)) void seff_throw(effect_id eff_id, void *payload);
         } payload;                        \
         payload.result = request.payload; \
         (void)payload;                    \
-        block                             \
+        block           	              \
     }
-    
+#define CASE_DEFAULT(block) default: block
 #else
 
-#define SWITCH_EFFECT(request, block) { seff_request_t *__loc_request = &request;		\
-	if (false) {;}																		\
-	block																				\
-	} 			
+#define CASE_SWITCH(request, block) { seff_request_t *__loc_request = &request;		\
+	do {																				\
+		if (false) {;}																	\
+		block																			\
+	} while (false);	/*this is added so breaks still work as you would expect*/		\
+}
 #define CASE_EFFECT(name, block)															\
-    else if (EFF_ID(name) == *__loc_request.effect) {                                       \
+    if (EFF_ID(name) == __loc_request->effect) {                    		                \
         EFF_PAYLOAD_T(name) payload = *(EFF_PAYLOAD_T(name) *)(*__loc_request).payload; 	\
         (void)payload;                                                         				\
         block                                                                  				\
-    }
+}
 #define CASE_RETURN(block)       									\
-    else if (EFF_ID(return) == *__loc_request.effect): {            \
+    if (EFF_ID(return) == __loc_request->effect) {        		    \
         struct {                          							\
             void *result;                 							\
         } payload;                        							\
-        payload.result = *__loc_request.payload; 					\
+        payload.result = __loc_request->payload; 					\
         (void)payload;                    							\
         block                             							\
-    }
-#endif
+}
+#define CASE_DEFAULT(block)	{ block }
 
+#endif
 
 
 #ifdef EFF_ID_POLICY_COUNTER

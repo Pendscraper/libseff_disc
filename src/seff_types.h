@@ -8,9 +8,9 @@
 
 #define STACK_POLICY_SWITCH(segmented, fixed, vmmem) segmented
 
-#define EFF_ID_POLICY_COUNTER
+#define EFF_ID_POLICY_STACKREF
 
-#define EFF_ID_POLICY_SWITCH(stackref, counter) counter
+#define EFF_ID_POLICY_SWITCH(stackref, counter) stackref
 
 #define MAX_EFFECTS 64
 #define MAX_EFFECTS_PER_HANDLER 16

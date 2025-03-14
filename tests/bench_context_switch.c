@@ -27,19 +27,20 @@ int main(void) {
 
     int64_t state = 0;
     while (requests < 100 * 1000 * 1000) { // 100.000.000
-        switch (request.effect) {
-            CASE_EFFECT(request, get, {
+        CASE_SWITCH(request, {
+            CASE_EFFECT(get, {
                 request = seff_resume(k, (void *)state, HANDLES(EFF_ID(get), EFF_ID(put)));
                 break;
             })
-            CASE_EFFECT(request, put, {
+            CASE_EFFECT(put, {
                 state = payload.value;
                 request = seff_resume(k, NULL, HANDLES(EFF_ID(get), EFF_ID(put)));
                 break;
             })
-        default:
-            assert(false);
-        }
+		    CASE_DEFAULT(
+		        assert(false);
+            )
+        })
         requests++;
     }
     printf("Final state: %ld\n", state);

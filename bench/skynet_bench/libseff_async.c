@@ -180,8 +180,8 @@ void *worker_thread(void *_self) {
 
         seff_request_t request =
             seff_resume(current_task->coroutine, coroutine_arg, HANDLES(EFF_ID(async), EFF_ID(await)));
-        switch (request.effect) {
-            CASE_RETURN(request, {
+        CASE_SWITCH(request, {
+            CASE_RETURN({
                 debug(self->return_requests++);
                 future_t *promise = current_task->promise;
 
@@ -209,7 +209,7 @@ void *worker_thread(void *_self) {
                 atomic_fetch_sub_explicit(remaining_tasks, 1, memory_order_relaxed);
                 break;
             });
-            CASE_EFFECT(request, await, {
+            CASE_EFFECT(await, {
                 debug(self->await_requests++);
                 future_t *awaited = payload.fut;
                 SPINLOCK(&awaited->blocked, {
@@ -223,7 +223,7 @@ void *worker_thread(void *_self) {
                 });
                 break;
             });
-            CASE_EFFECT(request, async, {
+            CASE_EFFECT(async, {
                 debug(self->async_requests++);
                 atomic_fetch_add_explicit(remaining_tasks, 1, memory_order_relaxed);
 
@@ -242,9 +242,10 @@ void *worker_thread(void *_self) {
                 cl_queue_push(&self->task_queue, current_task);
                 break;
             });
-        default:
+        CASE_DEFAULT(
             assert(false);
-        }
+        )
+        })
     }
 
     return NULL;

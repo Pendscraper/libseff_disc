@@ -83,12 +83,12 @@ void *example(void *args) {
 
 void handle(seff_coroutine_t *k, prop_t *response) {
     seff_request_t request = seff_resume(k, response, r_smooth);
-    switch (request.effect) {
-        CASE_RETURN(request, {
+    CASE_SWITCH(request, {
+        CASE_RETURN({
             *result.dv = 1.0;
             return;
         });
-        CASE_EFFECT(request, r_ap0, {
+        CASE_EFFECT(r_ap0, {
             double v = e_c(payload.value);
             double dv = 0.0;
             prop_t r = ((prop_t){v, &dv});
@@ -96,7 +96,7 @@ void handle(seff_coroutine_t *k, prop_t *response) {
 
             break;
         });
-        CASE_EFFECT(request, r_ap1, {
+        CASE_EFFECT(r_ap1, {
             double v;
             switch (payload.op) {
             case negate_op:
@@ -115,7 +115,7 @@ void handle(seff_coroutine_t *k, prop_t *response) {
             }
             break;
         });
-        CASE_EFFECT(request, r_ap2, {
+        CASE_EFFECT(r_ap2, {
             double v;
             switch (payload.op) {
             case add_op:
@@ -145,7 +145,7 @@ void handle(seff_coroutine_t *k, prop_t *response) {
             }
             break;
         });
-    }
+    })
 }
 
 void *reverse(void *args) {

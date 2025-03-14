@@ -13,12 +13,13 @@ int main(void) {
     for (size_t i = 0; i < 1000000; i++) {
         seff_coroutine_t *k = seff_coroutine_new(computation, NULL);
         seff_request_t exn = seff_resume(k, NULL, HANDLES(runtime_error));
-        switch (exn.effect) {
-            CASE_EFFECT(exn, runtime_error, { caught++; });
-            break;
-        default:
-            assert(false);
-        }
+        CASE_SWITCH(exn, {
+            CASE_EFFECT(runtime_error, { caught++; break;});
+            
+		    CASE_DEFAULT(
+		        assert(false);
+            )
+        })
         seff_coroutine_delete(k);
     }
     printf("Caught %lu exceptions\n", caught);

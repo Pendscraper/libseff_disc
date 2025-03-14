@@ -76,8 +76,8 @@ void handle(seff_coroutine_t *k, prop_t *response) {
         *result.dv = 1.0;
         return;
     }
-    switch (request.effect) {
-        CASE_EFFECT(request, r_ap0, {
+    CASE_SWITCH(request, {
+        CASE_EFFECT(r_ap0, {
             double v = e_c(payload.value);
             double dv = 0.0;
             prop_t r = ((prop_t){v, &dv});
@@ -85,7 +85,7 @@ void handle(seff_coroutine_t *k, prop_t *response) {
 
             break;
         })
-        CASE_EFFECT(request, r_ap1, {
+        CASE_EFFECT(r_ap1, {
             double v;
             switch (payload.op) {
             case negate_op:
@@ -104,7 +104,7 @@ void handle(seff_coroutine_t *k, prop_t *response) {
             }
             break;
         })
-        CASE_EFFECT(request, r_ap2, {
+        CASE_EFFECT(r_ap2, {
             double v;
             switch (payload.op) {
             case add_op:
@@ -134,7 +134,7 @@ void handle(seff_coroutine_t *k, prop_t *response) {
             }
             break;
         })
-    }
+    })
 }
 
 void *reverse(void *args) {
@@ -154,13 +154,13 @@ void *evaluate(seff_coroutine_t *k, void *args) {
 
     seff_request_t request = seff_resume(k, NULL, e_smooth);
     while (true) {
-        switch (request.effect) {
-            CASE_EFFECT(request, e_ap0, {
+        CASE_SWITCH(request, {
+            CASE_EFFECT(e_ap0, {
                 value = payload.value;
                 request = seff_resume(k, (void *)&value, e_smooth);
                 break;
             })
-            CASE_EFFECT(request, e_ap1, {
+            CASE_EFFECT(e_ap1, {
                 switch (payload.op) {
                 case negate_op:
                     value = -payload.arg1;
@@ -169,7 +169,7 @@ void *evaluate(seff_coroutine_t *k, void *args) {
                 request = seff_resume(k, (void *)&value, e_smooth);
                 break;
             })
-            CASE_EFFECT(request, e_ap2, {
+            CASE_EFFECT(e_ap2, {
                 double arg1 = payload.arg1;
                 double arg2 = payload.arg2;
                 switch (payload.op) {
@@ -183,8 +183,8 @@ void *evaluate(seff_coroutine_t *k, void *args) {
                 request = seff_resume(k, (void *)&value, e_smooth);
                 break;
             })
-            CASE_RETURN(request, { return NULL; })
-        }
+            CASE_RETURN({ return NULL; })
+        })
     }
 
     return NULL;

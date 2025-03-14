@@ -25,34 +25,37 @@ void *bar(void *_child) {
 
     char *response = NULL;
     seff_request_t request = seff_resume(child, response, HANDLES(EFF_ID(get_name)));
-    switch (request.effect) {
-        CASE_EFFECT(request, get_name, {
+    CASE_SWITCH(request, {
+        CASE_EFFECT(get_name, {
             response = "bar1";
             break;
         });
-    default:
-        assert(false);
-    }
+		CASE_DEFAULT(
+		    assert(false);
+        )
+    })
 
     request = seff_resume(child, response, HANDLES(EFF_ID(get_name)));
-    switch (request.effect) {
-        CASE_EFFECT(request, get_name, {
+    CASE_SWITCH(request, {
+        CASE_EFFECT(get_name, {
             response = "bar2";
             break;
         });
-    default:
-        assert(false);
-    }
+		CASE_DEFAULT(
+		    assert(false);
+        )
+    })
 
     request = seff_resume(child, response, HANDLES(EFF_ID(get_name)));
-    switch (request.effect) {
-        CASE_EFFECT(request, get_name, {
+    CASE_SWITCH(request, {
+        CASE_EFFECT(get_name, {
             response = "bar3";
             break;
         });
-    default:
-        assert(false);
-    }
+		CASE_DEFAULT(
+		    assert(false);
+        )
+    })
 
     return NULL;
 }
@@ -74,13 +77,14 @@ int main(void) {
         request = seff_resume(j, NULL, HANDLES(EFF_ID(print)));
         if (j->state == FINISHED)
             break;
-        switch (request.effect) {
-            CASE_EFFECT(request, print, {
+        CASE_SWITCH(request, {
+            CASE_EFFECT(print, {
                 puts(payload.str);
                 break;
             });
-        default:
-            assert(false);
-        }
+		    CASE_DEFAULT(
+		        assert(false);
+            )
+        })
     }
 }

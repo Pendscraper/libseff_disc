@@ -23,17 +23,17 @@ int main(int argc, char **argv) {
 
     seff_request_t request = seff_resume(k, NULL, HANDLES(EFF_ID(put), EFF_ID(get)));
     while (!seff_finished(request)) {
-        switch (request.effect) {
-            CASE_EFFECT(request, put, {
+        CASE_SWITCH(request, {
+            CASE_EFFECT(put, {
                 value = payload.value;
                 request = seff_resume(k, NULL, HANDLES(EFF_ID(put), EFF_ID(get)));
                 break;
             });
-            CASE_EFFECT(request, get, {
+            CASE_EFFECT(get, {
                 request = seff_resume(k, (void *)value, HANDLES(EFF_ID(put), EFF_ID(get)));
                 break;
             });
-        }
+        })
     }
 
     printf("Final value is %ld\n", value);

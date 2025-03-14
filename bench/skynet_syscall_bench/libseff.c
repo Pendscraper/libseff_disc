@@ -72,19 +72,20 @@ int main(int argc, char **argv) {
 
     seff_request_t request = seff_resume(root, NULL, HANDLES(yield_int));
     while (true) {
-        switch (request.effect) {
-            CASE_EFFECT(request, yield_int, {
+        CASE_SWITCH(request, {
+            CASE_EFFECT(yield_int, {
                 total += payload.value;
                 break;
             });
-            CASE_RETURN(request, {
+            CASE_RETURN({
                 seff_coroutine_delete(root);
                 printf("Total: %ld\n", total);
                 return 0;
             });
-        default:
-            assert(false);
-        }
+		    CASE_DEFAULT(
+		        assert(false);
+          	)
+        })
         request = seff_resume(root, NULL, HANDLES(yield_int));
     }
 }

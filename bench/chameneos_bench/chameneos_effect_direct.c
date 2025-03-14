@@ -34,19 +34,19 @@ void execute(size_t meetings, colour *creatures, size_t creaturesSize) {
         uint64_t chameneosB;
         colour colB;
 
-        switch (reqs[a].effect) {
-            CASE_EFFECT(reqs[a], meet, {
+        CASE_SWITCH(reqs[a] {
+            CASE_EFFECT(meet, {
                 chameneosA = payload.self;
                 colA = payload.msg;
             })
-        };
+        });
 
-        switch (reqs[b].effect) {
-            CASE_EFFECT(reqs[b], meet, {
+        CASE_SWITCH(reqs[b], {
+            CASE_EFFECT(meet, {
                 chameneosB = payload.self;
                 colB = payload.msg;
             })
-        };
+        });
 
         chameneos_meet_t meetMsg;
 

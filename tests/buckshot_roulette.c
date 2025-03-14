@@ -51,10 +51,10 @@ int main(void) {
 	bool forward = true;
 	
 	while (true) {
-    		seff_request_t request = seff_resume(players[currentPlayer], NULL, HANDLES(EFF_ID(end_turn)));
-    		switch (request.effect) {
+    	seff_request_t request = seff_resume(players[currentPlayer], NULL, HANDLES(EFF_ID(end_turn)));
+    	CASE_SWITCH(request, {
     		
-		    CASE_EFFECT(request, end_turn, {
+		    CASE_EFFECT(end_turn, {
 		        switch (payload.used) {
 		        	case SKIP:
 		        		currentPlayer = nextPlayer(currentPlayer, forward);
@@ -70,7 +70,7 @@ int main(void) {
 		        currentPlayer = nextPlayer(currentPlayer, forward);
 			break;
 		    });
-		    CASE_RETURN(request, {
+		    CASE_RETURN({
 		    	for (int i = 0; i < PLAYER_COUNT; i++) {
 		    		if (i != currentPlayer) {
 		    			seff_coroutine_delete(players[i]);
@@ -81,6 +81,6 @@ int main(void) {
 		    	free(final);
 		    	return 0; 
 		    });
-		}
+		})
 	}
 }

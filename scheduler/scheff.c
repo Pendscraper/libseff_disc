@@ -207,13 +207,13 @@ void *scheff_worker_thread(void *_self) {
 
         seff_request_t request = seff_resume(&current_task->coroutine, NULL,
             HANDLES(EFF_ID(fork), EFF_ID(poll), EFF_ID(sleep), EFF_ID(wake)));
-        switch (request.effect) {
-            CASE_RETURN(request, {
+        CASE_SWITCH(request, {
+            CASE_RETURN({
                 debug(self->return_requests++);
                 FINALIZE(current_task);
                 break;
             });
-            CASE_EFFECT(request, fork, {
+            CASE_EFFECT(fork, {
                 debug(self->fork_requests++);
 
                 RELAXED(fetch_add, remaining_tasks, 1);
@@ -230,7 +230,7 @@ void *scheff_worker_thread(void *_self) {
                 ENQUEUE_PRIORITY(new_task);
                 break;
             });
-            CASE_EFFECT(request, poll, {
+            CASE_EFFECT(poll, {
                 // TODO: why do we need poll, isn't sleep + event loop enough?
                 debug(self->poll_requests++);
 
@@ -245,7 +245,7 @@ void *scheff_worker_thread(void *_self) {
                 ENQUEUE(current_task);
                 break;
             });
-            CASE_EFFECT(request, sleep, {
+            CASE_EFFECT(sleep, {
                 debug(self->sleep_requests++);
 
                 scheff_waker_t *waker = (scheff_waker_t *)current_task;
@@ -255,7 +255,7 @@ void *scheff_worker_thread(void *_self) {
 
                 break;
             });
-            CASE_EFFECT(request, wake, {
+            CASE_EFFECT(wake, {
                 debug(self->wake_requests++);
 
                 for (size_t i = 0; i < payload.n_wakers; i++) {
@@ -271,9 +271,10 @@ void *scheff_worker_thread(void *_self) {
                 }
                 break;
             });
-        default:
-            assert(false);
-        }
+		    CASE_DEFAULT(
+		        assert(false);
+            )
+        })
     }
 
     return NULL;

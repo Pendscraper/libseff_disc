@@ -24,16 +24,17 @@ void *with_output_to_buffer(seff_start_fun_t *fn, void *arg, char *buffer) {
 
     while (true) {
         seff_request_t res = seff_resume(&k, NULL, HANDLES(EFF_ID(print)));
-        switch (res.effect) {
-            CASE_EFFECT(res, print, {
+        CASE_SWITCH(res, {
+            CASE_EFFECT(print, {
                 // Note we are NOT using strcpy!
                 buffptr = stpcpy(buffptr, payload.str);
                 break;
             });
-            CASE_RETURN(res, { return payload.result; });
-        default:
-            assert(false);
-        }
+            CASE_RETURN({ return payload.result; });
+		    CASE_DEFAULT(
+		        assert(false);
+		    )
+        })
     }
 
     return NULL;
