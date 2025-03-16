@@ -100,10 +100,11 @@ E __attribute__((noreturn)) void seff_throw(effect_id eff_id, void *payload);
 #define EFF_ID(name) __##name##_eff_id
 #define EFF_PAYLOAD_T(name) __##name##_eff_payload
 #define EFF_RET_T(name) __##name##_eff_ret
-#define HANDLES(...) ({static uint64_t _ef[] = {__VA_ARGS__, 0}; (effect_set)_ef;})
+#define EFF_DEF_HANDLER(name) __##name##_eff_def_handler
+#define HANDLES(...) ({static effect_id _ef[] = {__VA_ARGS__, 0}; (effect_set)_ef;})
 
-#define HANDLES_ALL HANDLES(ALL_EFFECT_ID)
-#define HANDLES_NONE ({static uint64_t _ef[] = {0}; (effect_set)_ef;})
+#define HANDLES_ALL HANDLES(HANDLES_ALL_FLAG)
+#define HANDLES_NONE ({static effect_id _ef[] = {0}; (effect_set)_ef;})
 
 #ifdef EFF_ID_POLICY_FIXED
 #define CASE_SWITCH(effect_id, block) switch(effect_id) {					   \
@@ -160,17 +161,23 @@ effect_id _get_new_id() {
 }
 #endif
 
-#define DEFINE_EFFECT(name, ret_val, payload)          \
-    typedef ret_val EFF_RET_T(name);                       \
+#define DEFINE_EFFECT(name, ret_val, payload)          												\
+    typedef ret_val EFF_RET_T(name);                       											\
+    static default_handler_t *EFF_DEF_HANDLER(name) = NULL;											\
     static const effect_id EFF_ID(name) = EFF_ID_POLICY_SWITCH(         							\
-    														(effect_id) &EFF_ID(name);,     \
-    														_get_new_id(name);              \
-    													)  \
+    														(effect_id) &EFF_DEF_HANDLER(name); ,   \
+    														_get_new_id(name);              		\
+    													)  											\
     typedef struct payload EFF_PAYLOAD_T(name)
 
+// Note that return need not return a struct
 typedef void EFF_RET_T(return);
-static const effect_id EFF_ID(return) = RETURN_EFFECT_ID;
+static default_handler_t *EFF_DEF_HANDLER(return) = NULL;
+static const effect_id EFF_ID(return) = &EFF_DEF_HANDLER(return);
 typedef void EFF_PAYLOAD_T(return);
+
+#define RETURN_EFFECT_ID EFF_ID(return)
+#define HANDLES_ALL_FLAG EFF_ID(return)
 
 static inline bool seff_finished(seff_request_t req) { return req.effect == EFF_ID(return); }
 

@@ -71,12 +71,9 @@ else:
     print(f'Fatal error: unsupported effect ID generation policy {id_policy}')
 
 
-max_effects = Defn('MAX_EFFECTS', arch.word_type.size * 8)
-effect_set = Typedef("effect_set", ptr(arch.word_type))
-effect_id = Typedef('effect_id', arch.word_type)
 
-Defn('RETURN_EFFECT_ID', '0xFFFFFFFFFFFFFFFF')
-Defn('ALL_EFFECT_ID', '0xFFFFFFFFFFFFFFFE')
+effect_id = Typedef('effect_id', ptr(void))
+effect_set = Typedef("effect_set", ptr(effect_id.ty))
 
 eff = Struct('seff_request_t',
     Field('effect', effect_id.ty),

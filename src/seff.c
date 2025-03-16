@@ -24,8 +24,6 @@
 #include "seff.h"
 #include "seff_types.h"
 
-#include "hashmap_extern/hashmap.h"
-
 #ifndef NDEBUG
 #define DEBUG_INFO(fmt, ...) fprintf(stderr, fmt, ##__VA_ARGS__)
 #else
@@ -131,7 +129,7 @@ bool seff_coroutine_init_sized(
 }
 
 static inline bool _find_effect(effect_id effect, effect_set handled) {
-	if (handled[0] == ALL_EFFECT_ID) {
+	if (handled[0] == HANDLES_ALL_FLAG) {
 		return true;
 	}
 	int i = 0;
@@ -154,29 +152,14 @@ seff_coroutine_t *seff_locate_handler(effect_id effect) {
     return k;
 }
 
-
-
-typedef struct _default_handler_entry {
-	effect_id effect;
-	default_handler_t *handler;
-} _default_handler_entry;
-
-static inline bool _iseq(void *a, void *b) {
-	_default_handler_entry first = (_default_handler_entry)a;
-	_default_handler_entry second = (_default_handler_entry)b;
-	return first -> effect == second -> effect;
-}
-
-struct hashmap *default_handlers = hashmap_new(sizeof(void *), 0, 0, 0, hashmap_sip, _iseq, NULL, NULL);
-
 default_handler_t *seff_set_default_handler(effect_id effect, default_handler_t *handler) {
-	hashmap_set(default_handlers, &(struct _default_handler_entry){ .effect=effect, .handler=handler });
-    default_handler_t *prev = default_handlers[effect];
-    default_handlers[effect] = handler;
+	default_handler_t **handler_loc = (default_handler_t **)effect;
+	default_handler_t *prev = *handler_loc;
+	*handler_loc = handler;
     return prev;
 }
 
-default_handler_t *seff_get_default_handler(effect_id effect) { return default_handlers[effect]; }
+default_handler_t *seff_get_default_handler(effect_id effect) { return *((default_handler_t **)effect); }
 
 void seff_throw(effect_id eff_id, void *payload) {
     // The state code is set by seff_exit
@@ -186,7 +169,7 @@ void seff_throw(effect_id eff_id, void *payload) {
     } else {
         /* Execute the handler in-place, since default handlers are not allowed to pause the
          * coroutine */
-        default_handlers[eff_id](payload);
+        (*seff_get_default_handler(eff_id))(payload);
         exit(-1);
     }
     // TODO: add an error message when there is no handler (rather than crashing)
