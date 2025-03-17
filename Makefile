@@ -11,7 +11,7 @@
 # See the Mulan PSL v2 for more details.
 #
 
-BUILD        := debug
+BUILD        := release
 STACK_POLICY := segmented
 ARCH         := x86-64
 
