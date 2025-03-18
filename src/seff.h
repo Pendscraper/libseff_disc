@@ -126,6 +126,7 @@ E __attribute__((noreturn)) void seff_throw(effect_id eff_id, void *payload);
         block           	              \
     }
 #define CASE_DEFAULT(block) default: block
+
 #else
 
 #define CASE_SWITCH(request, block) { seff_request_t *__loc_request = &request;		\
@@ -169,13 +170,11 @@ effect_id _get_new_id() {
     													)  											\
     typedef struct payload EFF_PAYLOAD_T(name)
 
-//#define RETURN_EFFECT_ID 0xFFFFFFFFFFFFFFFF
 #define HANDLES_ALL_FLAG EFF_ID(return)
 
 // Note that return need not return a struct
 typedef void EFF_RET_T(return);
-//static const effect_id EFF_ID(return) = &EFF_ID(return);
-static const effect_id EFF_ID(return) = (void *)RETURN_EFFECT_ID;
+static const effect_id EFF_ID(return) = (effect_id) RETURN_EFFECT_ID;
 typedef void EFF_PAYLOAD_T(return);
 
 static inline bool seff_finished(seff_request_t req) { return req.effect == EFF_ID(return); }
