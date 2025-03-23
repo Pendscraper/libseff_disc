@@ -6,8 +6,8 @@
  * Effects: print, read
  */
 
-#define PRINT_CODE 0
-#define READ_CODE 1
+#define PRINT_CODE 0xFFFE
+#define READ_CODE 0xFFFF
 
 void *effectful_body(void *args) {
     // perform(read)
@@ -30,7 +30,7 @@ int main(void) {
     seff_request_t request = seff_resume_handling_all(k, NULL);
 
     for (size_t i = 0; i < 5; i++) {
-        switch (request.effect) {
+        switch ((int)request.effect) {
         case PRINT_CODE:
             puts((char *)request.payload);
             request = seff_resume_handling_all(k, NULL);

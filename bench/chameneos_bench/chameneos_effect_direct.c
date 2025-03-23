@@ -16,7 +16,7 @@ void execute(size_t meetings, colour *creatures, size_t creaturesSize) {
         inits[i].col = creatures[i];
         chms[i] = seff_coroutine_new(chameneos, (void *)&inits[i]);
         // First resume, we assume it's not expecting anything
-        reqs[i] = seff_resume(chms[i], (void *)NULL, HANDLES(meet));
+        reqs[i] = seff_resume(chms[i], (void *)NULL, HANDLES(EFF_ID(meet)));
     }
 
     // This takes advantage of this problem structure, not really fair, but for experimental
@@ -34,18 +34,22 @@ void execute(size_t meetings, colour *creatures, size_t creaturesSize) {
         uint64_t chameneosB;
         colour colB;
 
-        CASE_SWITCH(reqs[a] {
+        CASE_SWITCH(reqs[a], {
             CASE_EFFECT(meet, {
                 chameneosA = payload.self;
                 colA = payload.msg;
+                break;
             })
+            assert(false);
         });
 
         CASE_SWITCH(reqs[b], {
             CASE_EFFECT(meet, {
                 chameneosB = payload.self;
                 colB = payload.msg;
+                break;
             })
+            assert(false);
         });
 
         chameneos_meet_t meetMsg;
@@ -53,12 +57,12 @@ void execute(size_t meetings, colour *creatures, size_t creaturesSize) {
         meetMsg.finish = false;
         meetMsg.chameneos = chameneosB;
         meetMsg.col = colB;
-        reqs[a] = seff_resume(chms[a], (void *)&meetMsg, HANDLES(meet));
+        reqs[a] = seff_resume(chms[a], (void *)&meetMsg, HANDLES(EFF_ID(meet)));
 
         meetMsg.finish = false;
         meetMsg.chameneos = chameneosA;
         meetMsg.col = colA;
-        reqs[b] = seff_resume(chms[b], (void *)&meetMsg, HANDLES(meet));
+        reqs[b] = seff_resume(chms[b], (void *)&meetMsg, HANDLES(EFF_ID(meet)));
     }
 
     uint64_t total_meetings = 0;
@@ -66,7 +70,7 @@ void execute(size_t meetings, colour *creatures, size_t creaturesSize) {
         chameneos_meet_t meetMsg;
         meetMsg.finish = true;
         // First resume
-        total_meetings += (uint64_t)seff_resume(chms[i], (void *)&meetMsg, HANDLES(meet)).payload;
+        total_meetings += (uint64_t)seff_resume(chms[i], (void *)&meetMsg, HANDLES(EFF_ID(meet))).payload;
     }
 
     spell_int(total_meetings);

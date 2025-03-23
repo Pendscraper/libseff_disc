@@ -1,1 +1,3 @@
 sed -i 's/DEFINE_EFFECT(\([^,]*\), [0-9]*,/DEFINE_EFFECT(\1,/g'
+
+find . \( -type d -name .git -prune \) -o -type f -print0 | xargs -0 sed -i 's/DEFINE_EFFECT(\([^,]*\), [0-9]*,/DEFINE_EFFECT(\1,/g'

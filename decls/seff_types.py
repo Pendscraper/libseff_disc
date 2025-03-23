@@ -72,7 +72,7 @@ else:
 
 
 
-effect_id = Typedef('effect_id', ptr(void))
+effect_id = Typedef('effect_id', arch.word_type)
 effect_set = Typedef("effect_set", ptr(effect_id.ty))
 
 eff = Struct('seff_request_t',
@@ -80,7 +80,7 @@ eff = Struct('seff_request_t',
     Field('payload', ptr(void))
 )
 
-Defn('RETURN_EFFECT_ID', '0xFFFFFFFFFFFFFFFF')
+Defn('RETURN_EFFECT_ID', '0x1')
 
 cont_fields = [
     Field('current_coroutine', ptr(void)),
