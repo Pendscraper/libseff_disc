@@ -33,7 +33,7 @@ void *chameneos_wrapper(struct actor_t *self) {
 
     seff_coroutine_t *cham = seff_coroutine_new(chameneos, (void *)&effect_info);
     // First resume, we assume it's not expecting anything
-    seff_request_t mate = seff_resume(cham, (void *)NULL, HANDLES(meet));
+    seff_request_t mate = seff_resume(cham, (void *)NULL, HANDLES(EFF_ID(meet)));
     while (true) {
         CASE_SWITCH(mate, {
             CASE_EFFECT(meet, {
@@ -58,14 +58,14 @@ void *chameneos_wrapper(struct actor_t *self) {
                     meetMsg.col = other_mate->col;
                     free(other_mate);
                 }
-                mate = seff_resume(cham, (void *)&meetMsg, HANDLES(meet));
+                mate = seff_resume(cham, (void *)&meetMsg, HANDLES(EFF_ID(meet)));
                 break;
             });
             CASE_RETURN({
                 // send final counter and finish
                 broker_message_t *msg = malloc(sizeof(broker_message_t));
                 msg->finish = true;
-                msg->payload.final_meetings = (int)mate.payload;
+                msg->payload.final_meetings = (int)(uint64_t)mate.payload;
                 actor_send(broker, msg);
 
                 return NULL;

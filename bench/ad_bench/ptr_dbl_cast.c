@@ -11,12 +11,12 @@ typedef union {
     void *ptr;
 } cast_t;
 
-DEFINE_EFFECT(e_ap0, 0, void *, { double value; });
-DEFINE_EFFECT(e_ap1, 1, void *, {
+DEFINE_EFFECT(e_ap0, void *, { double value; });
+DEFINE_EFFECT(e_ap1, void *, {
     op1_t op;
     double arg1;
 });
-DEFINE_EFFECT(e_ap2, 2, void *, {
+DEFINE_EFFECT(e_ap2, void *, {
     op2_t op;
     double arg1;
     double arg2;
@@ -27,7 +27,7 @@ typedef struct {
     double *dv;
 } prop_t;
 
-effect_set e_smooth = HANDLES(EFF_ID(e_ap0), EFF_ID(e_ap1), EFF_ID(e_ap2));
+effect_set e_smooth = (effect_id[]){EFF_ID(e_ap0), EFF_ID(e_ap1), EFF_ID(e_ap2), 0};
 
 #define PTR_TO_DBL(expr)     \
     ({                       \
@@ -40,18 +40,18 @@ double e_n(double x) { return PTR_TO_DBL(PERFORM(e_ap1, negate_op, x)); }
 double e_a(double x, double y) { return PTR_TO_DBL(PERFORM(e_ap2, add_op, x, y)); }
 double e_m(double x, double y) { return PTR_TO_DBL(PERFORM(e_ap2, multiply_op, x, y)); }
 
-DEFINE_EFFECT(r_ap0, 3, prop_t *, { double value; });
-DEFINE_EFFECT(r_ap1, 4, prop_t *, {
+DEFINE_EFFECT(r_ap0, prop_t *, { double value; });
+DEFINE_EFFECT(r_ap1, prop_t *, {
     op1_t op;
     prop_t arg1;
 });
-DEFINE_EFFECT(r_ap2, 5, prop_t *, {
+DEFINE_EFFECT(r_ap2, prop_t *, {
     op2_t op;
     prop_t arg1;
     prop_t arg2;
 });
 
-effect_set r_smooth = HANDLES(EFF_ID(r_ap0), EFF_ID(r_ap1), EFF_ID(r_ap2));
+effect_set r_smooth = (effect_id[]){EFF_ID(r_ap0), EFF_ID(r_ap1), EFF_ID(r_ap2), };
 
 prop_t r_c(double x) { return *PERFORM(r_ap0, x); }
 prop_t r_n(prop_t x) { return *PERFORM(r_ap1, negate_op, x); }
@@ -165,14 +165,14 @@ void *evaluate(seff_coroutine_t *k, void *args) {
 
     seff_request_t request = seff_resume(k, NULL, e_smooth);
     while (true) {
-        switch (request.effect) {
-            CASE_RETURN(request, { return NULL; });
-            CASE_EFFECT(request, e_ap0, {
+        CASE_SWITCH(request, {
+            CASE_RETURN({ return NULL; });
+            CASE_EFFECT(e_ap0, {
                 value.dbl = payload.value;
                 request = seff_resume(k, value.ptr, e_smooth);
                 break;
             });
-            CASE_EFFECT(request, e_ap1, {
+            CASE_EFFECT(e_ap1, {
                 switch (payload.op) {
                 case negate_op:
                     value.dbl = -payload.arg1;
@@ -181,7 +181,7 @@ void *evaluate(seff_coroutine_t *k, void *args) {
                 request = seff_resume(k, value.ptr, e_smooth);
                 break;
             });
-            CASE_EFFECT(request, e_ap2, {
+            CASE_EFFECT(e_ap2, {
                 double arg1 = payload.arg1;
                 double arg2 = payload.arg2;
                 switch (payload.op) {
@@ -195,7 +195,7 @@ void *evaluate(seff_coroutine_t *k, void *args) {
                 request = seff_resume(k, value.ptr, e_smooth);
                 break;
             });
-        }
+        })
     }
 }
 

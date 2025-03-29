@@ -22,12 +22,14 @@
         }                                                                            \
     }
 
+static effect_id arbitrary_effect = (effect_id)&arbitrary_effect;
+
 void *fibonacci_generator(void *arg) {
     seff_coroutine_t *self = seff_current_coroutine();
     // The upper limit is passed to the coroutine as a void*
     int64_t a = 1, b = 0;
     while (true) {
-        seff_yield(self, 0, (void *)a);
+        seff_yield(self, arbitrary_effect, (void *)a);
         int64_t tmp = a;
         a = a + b;
         b = tmp;
@@ -36,11 +38,11 @@ void *fibonacci_generator(void *arg) {
 
 MAKE_GENERATOR_DECORATOR(filter, bool (*predicate)(void *);, {
     if (args.predicate(next)) {
-        seff_yield(self, 0, next);
+        seff_yield(self, arbitrary_effect, next);
     }
 })
 
-MAKE_GENERATOR_DECORATOR(map, void *(*fn)(void *);, { seff_yield(self, 0, args.fn(next)); })
+MAKE_GENERATOR_DECORATOR(map, void *(*fn)(void *);, { seff_yield(self, arbitrary_effect, args.fn(next)); })
 
 void *twice(void *arg) { return (void *)(2 * (int64_t)arg); }
 

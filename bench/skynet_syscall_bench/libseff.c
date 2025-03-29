@@ -70,7 +70,7 @@ int main(int argc, char **argv) {
     seff_coroutine_t *root = seff_coroutine_new(skynet, (void *)1);
     int64_t total = 0;
 
-    seff_request_t request = seff_resume(root, NULL, HANDLES(yield_int));
+    seff_request_t request = seff_resume(root, NULL, HANDLES(EFF_ID(yield_int)));
     while (true) {
         CASE_SWITCH(request, {
             CASE_EFFECT(yield_int, {
@@ -86,6 +86,6 @@ int main(int argc, char **argv) {
 		        assert(false);
           	)
         })
-        request = seff_resume(root, NULL, HANDLES(yield_int));
+        request = seff_resume(root, NULL, HANDLES(EFF_ID(yield_int)));
     }
 }

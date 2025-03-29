@@ -129,15 +129,22 @@ bool seff_coroutine_init_sized(
 }
 
 static inline bool _find_effect(effect_id effect, effect_set handled) {
-	if (handled[0] == HANDLES_ALL_FLAG) {
-		return true;
+	if (handled[0] == 0) {
+		switch (handled[1]) {
+			case 0:
+				return false;
+			case 1:
+				return true;
+			default:
+				assert(false);
+		}
 	}
 	int i = 0;
-	while (handled[i] != 0) {
+	do {
 		if (effect == handled[i++]) {
 			return true;
 		}
-	}
+	} while (handled[i] != 0);
 	return false;
 }
 

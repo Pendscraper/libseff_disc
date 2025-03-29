@@ -40,7 +40,7 @@ void execute(size_t meetings, colour *creatures, size_t creaturesSize) {
                 colA = payload.msg;
                 break;
             })
-            assert(false);
+            CASE_DEFAULT(assert(false);)
         });
 
         CASE_SWITCH(reqs[b], {
@@ -49,7 +49,7 @@ void execute(size_t meetings, colour *creatures, size_t creaturesSize) {
                 colB = payload.msg;
                 break;
             })
-            assert(false);
+            CASE_DEFAULT(assert(false);)
         });
 
         chameneos_meet_t meetMsg;

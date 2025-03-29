@@ -101,10 +101,13 @@ E __attribute__((noreturn)) void seff_throw(effect_id eff_id, void *payload);
 #define EFF_PAYLOAD_T(name) __##name##_eff_payload
 #define EFF_RET_T(name) __##name##_eff_ret
 #define EFF_DEF_HANDLER(name) __##name##_eff_def_handler
-#define HANDLES(...) ({static effect_id _ef[] = {__VA_ARGS__, 0}; (effect_set)_ef;})
+#define HANDLES(...) ({static effect_id _____ef[] = {__VA_ARGS__, 0}; (effect_set)_____ef;})
+#define HANDLES_TOPLEVEL(...) (effect_set){__VA_ARGS__, 0}
 
-#define HANDLES_ALL HANDLES(HANDLES_ALL_FLAG)
-#define HANDLES_NONE ({static effect_id _ef[] = {0}; (effect_set)_ef;})
+#define HANDLES_ALL HANDLES(0, 1)
+#define HANDLES_NONE HANDLES(0)
+
+#define ALLOC_NEW_STATIC_ID() ({static effect_id _____id = &_____id; _____id;})
 
 #ifdef EFF_ID_POLICY_FIXED
 #define CASE_SWITCH(effect_id, block) switch(effect_id) {					   \
@@ -169,8 +172,6 @@ effect_id _get_new_id() {
     														_get_new_id(name);              		\
     													)  											\
     typedef struct payload EFF_PAYLOAD_T(name)
-
-#define HANDLES_ALL_FLAG EFF_ID(return)
 
 // Note that return need not return a struct
 typedef void EFF_RET_T(return);

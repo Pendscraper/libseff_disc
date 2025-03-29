@@ -80,7 +80,7 @@ eff = Struct('seff_request_t',
     Field('payload', ptr(void))
 )
 
-Defn('RETURN_EFFECT_ID', '0x1')
+Defn('RETURN_EFFECT_ID', '0x0')
 
 cont_fields = [
     Field('current_coroutine', ptr(void)),
