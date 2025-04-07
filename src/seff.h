@@ -101,11 +101,12 @@ E __attribute__((noreturn)) void seff_throw(effect_id eff_id, void *payload);
 #define EFF_PAYLOAD_T(name) __##name##_eff_payload
 #define EFF_RET_T(name) __##name##_eff_ret
 #define EFF_DEF_HANDLER(name) __##name##_eff_def_handler
-#define HANDLES(...) ({static effect_id _____ef[] = {__VA_ARGS__, 0}; (effect_set)_____ef;})
+#define _HANDLES_BASE(...) ({static effect_id _____ef[] = {__VA_ARGS__}; (effect_set)_____ef;})
+#define HANDLES(...) _HANDLES_BASE(__VA_ARGS__, 0)
 #define HANDLES_TOPLEVEL(...) (effect_set){__VA_ARGS__, 0}
 
-#define HANDLES_ALL HANDLES(0, 1)
-#define HANDLES_NONE HANDLES(0)
+#define HANDLES_ALL (effect_set)handles_all_pointer
+#define HANDLES_NONE _HANDLES_BASE(0)
 
 #define ALLOC_NEW_STATIC_ID() ({static effect_id _____id = &_____id; _____id;})
 
@@ -167,16 +168,16 @@ effect_id _get_new_id() {
 #define DEFINE_EFFECT(name, ret_val, payload)          												\
     typedef ret_val EFF_RET_T(name);                       											\
     static default_handler_t *EFF_DEF_HANDLER(name) = NULL;											\
-    static const effect_id EFF_ID(name) = EFF_ID_POLICY_SWITCH(         							\
-    														(effect_id) &EFF_DEF_HANDLER(name); ,   \
-    														_get_new_id(name);              		\
-    													)  											\
+    static const effect_id EFF_ID(name) = (effect_id) &EFF_DEF_HANDLER(name);						\
     typedef struct payload EFF_PAYLOAD_T(name)
 
 // Note that return need not return a struct
 typedef void EFF_RET_T(return);
 static const effect_id EFF_ID(return) = (effect_id) RETURN_EFFECT_ID;
 typedef void EFF_PAYLOAD_T(return);
+
+static const effect_set _handles_all_set = (effect_id[]){0}; // should never be accessed - this should be detected by a pointer comparison first
+static const void *handles_all_pointer = (void *)_handles_all_set;
 
 static inline bool seff_finished(seff_request_t req) { return req.effect == EFF_ID(return); }
 
