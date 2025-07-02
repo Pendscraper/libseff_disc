@@ -78,6 +78,8 @@ clean_deps:
 	rm -rf ${DEPS_DIR}/cppcoro/build
 	$(MAKE) -C ${DEPS_DIR}/libhandler clean
 	rm -rf ${DEPS_DIR}/picohttpparser/build
+	$(MAKE) -C ${DEPS_DIR}/libseff clean
+	rm -rf ${DEPS_DIR}/libseff/output
 
 ${DEPS_DIR}/cppcoro/tools/cake/src/run.py:
 	git submodule update --init --recursive
@@ -114,6 +116,18 @@ $(LIBHANDLER_LIB):
 	$(MAKE) VARIANT=${BUILD} -C ${DEPS_DIR}/libhandler depend
 	$(MAKE) VARIANT=${BUILD} -C ${DEPS_DIR}/libhandler
 	mv ${DEPS_DIR}/libhandler/tmp_config.txt ${DEPS_DIR}/libhandler/out/config.txt
+
+LIBSEFF_OG_LIB = ${DEPS_DIR}/libhandler/output/lib/libseff.a
+
+$(LIBSEFF_OG_LIB):
+	
+	cd ${DEPS_DIR}/libseff; \
+	sed -i -e 's/clang-10/${CC}/g' ./Makefile; \
+	sed -i -e 's/clang++-10/${CXX}/g' ./Makefile;
+	cd ${DEPS_DIR}/libseff/bench; \
+	sed -i -e 's/clang-10/${CC}/g' ./common.mk; \
+	sed -i -e 's/clang++-10/${CXX}/g' ./common.mk;
+	$(MAKE) VARIANT=${BUILD} -C ${LIBSEFF_OG_LIB}
 
 PICOHTTP_LIB := ${DEPS_DIR}/picohttpparser/build/picohttpparser.a
 
