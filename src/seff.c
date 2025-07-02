@@ -153,6 +153,7 @@ seff_coroutine_t *seff_locate_handler(effect_id effect) {
 }
 
 default_handler_t *seff_set_default_handler(effect_id effect, default_handler_t *handler) {
+	// effect IDs are also a pointer to the pointer to the default handler
 	default_handler_t **handler_loc = (default_handler_t **)effect;
 	default_handler_t *prev = *handler_loc;
 	*handler_loc = handler;
