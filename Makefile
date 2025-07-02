@@ -15,8 +15,8 @@ BUILD        := debug
 STACK_POLICY := segmented
 ARCH         := x86-64
 
-CC  := clang-10
-CXX := clang++-10
+CC  := clang-18
+CXX := clang++-18
 PY  := python3
 LD  := $(shell which ld.gold)
 
