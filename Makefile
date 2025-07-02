@@ -108,7 +108,16 @@ test: output/lib/libseff.a output/lib/libutils.a ./tests/*.c
 		$(MAKE) output/$${test%%.*} ; \
 	done
 
+LIBHANDLER_CONFIG_NAME := bench/libhandler/out/config.txt
+$(LIBHANDLER_CONFIG_NAME):
+	cd bench/libhandler; \
+	./configure --cc=${CC} --cxx=${CXX} | awk '/Configure for target:/ { printf "%s-%s\n", substr($$4, 1, length($$4)-1), $$5 }' > ${DEPS_DIR}/libhandler/tmp_config.txt
+	$(MAKE) VARIANT=${BUILD} -C ${DEPS_DIR}/libhandler depend
+	$(MAKE) VARIANT=${BUILD} -C ${DEPS_DIR}/libhandler
+	mv ${DEPS_DIR}/libhandler/tmp_config.txt ${DEPS_DIR}/libhandler/out/config.txt
+
 bench: output/lib/libseff.a output/lib/libutils.a
+	$(LIBHANDLER_CONFIG_NAME)
 	for bench_dir in bench/*_bench/ ; do \
 		$(MAKE) BUILD=${BUILD} -C $${bench_dir} all ; \
 	done

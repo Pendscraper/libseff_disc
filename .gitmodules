@@ -19,3 +19,7 @@
 [submodule "bench/picohttpparser"]
 	path = bench/picohttpparser
 	url = https://github.com/h2o/picohttpparser.git
+[submodule "libseff_old"]
+	path = bench/libseff
+	url = https://github.com/Pendscraper/libseff_disc.git
+	branch = working

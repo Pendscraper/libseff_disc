@@ -120,13 +120,6 @@ $(LIBHANDLER_LIB):
 LIBSEFF_OG_LIB = ${DEPS_DIR}/libhandler/output/lib/libseff.a
 
 $(LIBSEFF_OG_LIB):
-	
-	cd ${DEPS_DIR}/libseff; \
-	sed -i -e 's/clang-10/${CC}/g' ./Makefile; \
-	sed -i -e 's/clang++-10/${CXX}/g' ./Makefile;
-	cd ${DEPS_DIR}/libseff/bench; \
-	sed -i -e 's/clang-10/${CC}/g' ./common.mk; \
-	sed -i -e 's/clang++-10/${CXX}/g' ./common.mk;
 	$(MAKE) VARIANT=${BUILD} -C ${LIBSEFF_OG_LIB}
 
 PICOHTTP_LIB := ${DEPS_DIR}/picohttpparser/build/picohttpparser.a
