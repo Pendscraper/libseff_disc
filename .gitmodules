@@ -19,6 +19,3 @@
 [submodule "bench/picohttpparser"]
 	path = bench/picohttpparser
 	url = https://github.com/h2o/picohttpparser.git
-[submodule "bench/libseff"]
-	path = bench/libseff
-	url = https://github.com/effect-handlers/libseff.git
