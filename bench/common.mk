@@ -86,7 +86,7 @@ ${DEPS_DIR}/cppcoro/tools/cake/src/run.py:
 CPPCORO_LIB := ${DEPS_DIR}/cppcoro/build/libcppcoro.a
 $(CPPCORO_LIB): ${DEPS_DIR}/cppcoro/tools/cake/src/run.py
 	cd ${DEPS_DIR}/cppcoro; \
-	python2.7 tools/cake/src/run.py --debug=run release=optimised --clang-executable=$(CC) lib/build.cake; \
+	python3 tools/cake/src/run.py --debug=run release=optimised --clang-executable=$(CC) lib/build.cake; \
 	cp build/*/lib/*.a build/
 
 LIBCO_LIB := ${DEPS_DIR}/libco/lib/libcolib.a
@@ -117,10 +117,10 @@ $(LIBHANDLER_LIB):
 	$(MAKE) VARIANT=${BUILD} -C ${DEPS_DIR}/libhandler
 	mv ${DEPS_DIR}/libhandler/tmp_config.txt ${DEPS_DIR}/libhandler/out/config.txt
 
-LIBSEFF_OG_LIB = ${DEPS_DIR}/libhandler/output/lib/libseff.a
+LIBSEFF_OG_LIB = ${DEPS_DIR}/libseff/output/lib/libseff.a
 
 $(LIBSEFF_OG_LIB):
-	$(MAKE) VARIANT=${BUILD} -C ${LIBSEFF_OG_LIB}
+	$(MAKE) VARIANT=${BUILD} -C ${DEPS_DIR}/libseff
 
 PICOHTTP_LIB := ${DEPS_DIR}/picohttpparser/build/picohttpparser.a
 

@@ -3,40 +3,40 @@
 
 #include <stdio.h>
 
-DEFINE_EFFECT(effBase, void*, {uint64_t count; });
+DEFINE_EFFECT(effBase, 60, void*, {uint64_t count; });
 
-DEFINE_EFFECT(effIntermediate01, void *, {});
-DEFINE_EFFECT(effIntermediate02, void *, {});
-DEFINE_EFFECT(effIntermediate03, void *, {});
-DEFINE_EFFECT(effIntermediate04, void *, {});
-DEFINE_EFFECT(effIntermediate05, void *, {});
-DEFINE_EFFECT(effIntermediate06, void *, {});
-DEFINE_EFFECT(effIntermediate07, void *, {});
-DEFINE_EFFECT(effIntermediate08, void *, {});
-DEFINE_EFFECT(effIntermediate09, void *, {});
-DEFINE_EFFECT(effIntermediate10, void *, {});
-DEFINE_EFFECT(effIntermediate11, void *, {});
-DEFINE_EFFECT(effIntermediate12, void *, {});
-DEFINE_EFFECT(effIntermediate13, void *, {});
-DEFINE_EFFECT(effIntermediate14, void *, {});
-DEFINE_EFFECT(effIntermediate15, void *, {});
-DEFINE_EFFECT(effIntermediate16, void *, {});
-DEFINE_EFFECT(effIntermediate17, void *, {});
-DEFINE_EFFECT(effIntermediate18, void *, {});
-DEFINE_EFFECT(effIntermediate19, void *, {});
-DEFINE_EFFECT(effIntermediate20, void *, {});
-DEFINE_EFFECT(effIntermediate21, void *, {});
-DEFINE_EFFECT(effIntermediate22, void *, {});
-DEFINE_EFFECT(effIntermediate23, void *, {});
-DEFINE_EFFECT(effIntermediate24, void *, {});
-DEFINE_EFFECT(effIntermediate25, void *, {});
-DEFINE_EFFECT(effIntermediate26, void *, {});
-DEFINE_EFFECT(effIntermediate27, void *, {});
-DEFINE_EFFECT(effIntermediate28, void *, {});
-DEFINE_EFFECT(effIntermediate29, void *, {});
-DEFINE_EFFECT(effIntermediate30, void *, {});
-DEFINE_EFFECT(effIntermediate31, void *, {});
-DEFINE_EFFECT(effIntermediate32, void *, {});
+DEFINE_EFFECT(effIntermediate01, 1, void *, {});
+DEFINE_EFFECT(effIntermediate02, 2, void *, {});
+DEFINE_EFFECT(effIntermediate03, 3, void *, {});
+DEFINE_EFFECT(effIntermediate04, 4, void *, {});
+DEFINE_EFFECT(effIntermediate05, 5, void *, {});
+DEFINE_EFFECT(effIntermediate06, 6, void *, {});
+DEFINE_EFFECT(effIntermediate07, 7, void *, {});
+DEFINE_EFFECT(effIntermediate08, 8, void *, {});
+DEFINE_EFFECT(effIntermediate09, 9, void *, {});
+DEFINE_EFFECT(effIntermediate10, 10, void *, {});
+DEFINE_EFFECT(effIntermediate11, 11, void *, {});
+DEFINE_EFFECT(effIntermediate12, 12, void *, {});
+DEFINE_EFFECT(effIntermediate13, 13, void *, {});
+DEFINE_EFFECT(effIntermediate14, 14, void *, {});
+DEFINE_EFFECT(effIntermediate15, 15, void *, {});
+DEFINE_EFFECT(effIntermediate16, 16, void *, {});
+DEFINE_EFFECT(effIntermediate17, 17, void *, {});
+DEFINE_EFFECT(effIntermediate18, 18, void *, {});
+DEFINE_EFFECT(effIntermediate19, 19, void *, {});
+DEFINE_EFFECT(effIntermediate20, 20, void *, {});
+DEFINE_EFFECT(effIntermediate21, 21, void *, {});
+DEFINE_EFFECT(effIntermediate22, 22, void *, {});
+DEFINE_EFFECT(effIntermediate23, 23, void *, {});
+DEFINE_EFFECT(effIntermediate24, 24, void *, {});
+DEFINE_EFFECT(effIntermediate25, 25, void *, {});
+DEFINE_EFFECT(effIntermediate26, 26, void *, {});
+DEFINE_EFFECT(effIntermediate27, 27, void *, {});
+DEFINE_EFFECT(effIntermediate28, 28, void *, {});
+DEFINE_EFFECT(effIntermediate29, 29, void *, {});
+DEFINE_EFFECT(effIntermediate30, 30, void *, {});
+DEFINE_EFFECT(effIntermediate31, 31, void *, {});
+DEFINE_EFFECT(effIntermediate32, 32, void *, {});
 
 void* tracer(void* arg) {
 	uint64_t count = (uint64_t)arg;
