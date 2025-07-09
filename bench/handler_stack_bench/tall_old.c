@@ -41,26 +41,27 @@ DEFINE_EFFECT(effIntermediate32, 32, void *, {});
 void* tracer(void* arg) {
 	uint64_t count = (uint64_t)arg;
 	if (count > 0) {
-		effect_set handles = HANDLES(EFF_ID(effIntermediate01), EFF_ID(effIntermediate02),
-									EFF_ID(effIntermediate03), EFF_ID(effIntermediate04),
-									EFF_ID(effIntermediate05), EFF_ID(effIntermediate06),
-									EFF_ID(effIntermediate07), EFF_ID(effIntermediate08),
-									EFF_ID(effIntermediate09), EFF_ID(effIntermediate10),
-									EFF_ID(effIntermediate11), EFF_ID(effIntermediate12),
-									EFF_ID(effIntermediate13), EFF_ID(effIntermediate14),
-									EFF_ID(effIntermediate15), EFF_ID(effIntermediate16),
-									EFF_ID(effIntermediate17), EFF_ID(effIntermediate18),
-									EFF_ID(effIntermediate19), EFF_ID(effIntermediate20),
-									EFF_ID(effIntermediate21), EFF_ID(effIntermediate22),
-									EFF_ID(effIntermediate23), EFF_ID(effIntermediate24),
-									EFF_ID(effIntermediate25), EFF_ID(effIntermediate26),
-									EFF_ID(effIntermediate27), EFF_ID(effIntermediate28),
-									EFF_ID(effIntermediate29), EFF_ID(effIntermediate30),
-									EFF_ID(effIntermediate31), EFF_ID(effIntermediate32));
+		effect_set handles = HANDLES(effIntermediate01) | HANDLES(effIntermediate02) |
+									HANDLES(effIntermediate03) | HANDLES(effIntermediate04) |
+									HANDLES(effIntermediate05) | HANDLES(effIntermediate06) |
+									HANDLES(effIntermediate07) | HANDLES(effIntermediate08) |
+									HANDLES(effIntermediate09) | HANDLES(effIntermediate10) |
+									HANDLES(effIntermediate11) | HANDLES(effIntermediate12) |
+									HANDLES(effIntermediate13) | HANDLES(effIntermediate14) |
+									HANDLES(effIntermediate15) | HANDLES(effIntermediate16) |
+									HANDLES(effIntermediate17) | HANDLES(effIntermediate18) |
+									HANDLES(effIntermediate19) | HANDLES(effIntermediate20) |
+									HANDLES(effIntermediate21) | HANDLES(effIntermediate22) |
+									HANDLES(effIntermediate23) | HANDLES(effIntermediate24) |
+									HANDLES(effIntermediate25) | HANDLES(effIntermediate26) |
+									HANDLES(effIntermediate27) | HANDLES(effIntermediate28) |
+									HANDLES(effIntermediate29) | HANDLES(effIntermediate30) |
+									HANDLES(effIntermediate31) | HANDLES(effIntermediate32);
 		seff_coroutine_t *k = seff_coroutine_new(tracer, (void*)(count - 1));
 		seff_resume(k, NULL, handles);
 	} else {
 		uint64_t times = (uint64_t)PERFORM(effBase, count);
+		printf("cpoint3\n");
 		volatile seff_coroutine_t *original = NULL;
 		for (int i = 0; i < times; i++) {
 			original = seff_locate_handler(EFF_ID(effBase));
@@ -71,12 +72,16 @@ void* tracer(void* arg) {
 }
 
 int main(int argc, char **argv) {
+	printf("yippee!!\n");
 	if (argc > 3) return 1;
 	uint64_t rotations = (argc >= 2) ? (uint64_t)argv[1] : 100000;
 	uint64_t depth = (argc == 3) ? (uint64_t)argv[2] : 6000;
     seff_coroutine_t *k = seff_coroutine_new(tracer, (void*)(depth));
-    effect_set handler = HANDLES(EFF_ID(effBase));
+    effect_set handler = HANDLES(effBase);
+    printf("cpoint1\n");
     seff_resume(k, NULL, handler);
+    printf("cpoint2\n");
+    printf("frame: %p stack_top: %p current: %p handleds: %p\n", k->frame_ptr, k->resume_point.stack_top, k->resume_point.current_coroutine, k->handled_effects);
     seff_resume(k, (void*)rotations, handler);
     return 0;
 }
