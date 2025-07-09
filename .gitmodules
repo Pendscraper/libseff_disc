@@ -23,3 +23,12 @@
 	path = bench/libseff
 	url = https://github.com/Pendscraper/libseff_disc.git
 	branch = working
+[submodule "effect-bench"]
+	path = effect-bench
+	url = https://github.com/daanx/effect-bench.git
+[submodule "bench/internet_micro_bench/new"]
+	path = bench/internet_micro_bench/new
+	url = https://github.com/effect-handlers/effect-handlers-bench.git
+[submodule "bench/internet_micro_bench/old"]
+	path = bench/internet_micro_bench/old
+	url = https://github.com/effect-handlers/effect-handlers-bench.git

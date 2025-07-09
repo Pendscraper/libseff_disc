@@ -132,6 +132,9 @@ static inline bool _find_effect(effect_id effect, effect_set handled) {
 	if (handled == HANDLES_ALL) {
 		return true;
 	}
+	if (handled == NULL) { // this check exists solely because syscall wrappers seem to make the effect set null
+		return false;
+	}
 	int i = 0;
 	while (handled[i] != 0) {
 		if (effect == handled[i++]) {

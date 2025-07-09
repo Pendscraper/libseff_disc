@@ -25,6 +25,8 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 
 #ifdef __cplusplus
 #define E extern "C"

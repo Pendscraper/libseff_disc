@@ -1,12 +1,12 @@
 #include <assert.h>
 #include <stdio.h>
-#include <string.h>
-
+#include <string.h> 
+ 
 #include "seff.h"
 #include "skynet_common.h"
-
+ 
 DEFINE_EFFECT(yield_int, void, { int64_t value; });
-
+ 
 #define STACK_SIZE 256
 
 MAKE_SYSCALL_WRAPPER(
@@ -57,7 +57,7 @@ int64_t bench(int n_workers, int depth) {
     seff_coroutine_t *root = seff_coroutine_new_sized(skynet, (void *)1, STACK_SIZE);
 
     int64_t total = 0;
-
+    
     seff_request_t eff = seff_resume(root, NULL, HANDLES(EFF_ID(yield_int)));
     while (true) {
         CASE_SWITCH(eff, {
