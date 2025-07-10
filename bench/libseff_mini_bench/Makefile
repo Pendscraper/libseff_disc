@@ -35,13 +35,24 @@ test_cmd_old    = cd $(OLD_BENCH_LOC)/$(1) ; ./main $(2) > actual ; echo $(3) > 
 all: build
 
 bench: build
-	rm $(LIBSEFF)/bench/ad_bench/output/*.o
-	rm $(LIBSEFF)/bench/chameneos_bench/output/*.o
-	rm $(LIBSEFF)/bench/skynet_bench/output/*.o
-	rm $(LIBSEFF_OLD)/bench/ad_bench/output/*.o
-	rm $(LIBSEFF_OLD)/bench/chameneos_bench/output/*.o
-	rm $(LIBSEFF_OLD)/bench/skynet_bench/output/*.o
-	hyperfine --export-csv results8.csv \
+	-rm $(LIBSEFF)/bench/ad_bench/output/*.o
+	-rm $(LIBSEFF)/bench/chameneos_bench/output/*.o
+	-rm $(LIBSEFF)/bench/skynet_bench/output/*.o
+	-rm $(LIBSEFF_OLD)/bench/ad_bench/output/*.o
+	-rm $(LIBSEFF_OLD)/bench/chameneos_bench/output/*.o
+	-rm $(LIBSEFF_OLD)/bench/skynet_bench/output/*.o
+	-rm $(LIBSEFF)/bench/chameneos_bench/output/posix
+	-rm $(LIBSEFF_OLD)/bench/chameneos_bench/output/posix
+	hyperfine --warmup 5 -N -m 50 --export-csv resultsNew.csv \
+					'$(LIBSEFF)/bench/skynet_bench/output'/*  \
+					'$(LIBSEFF_OLD)/bench/skynet_bench/output'/*  \
+					'$(LIBSEFF)/bench/ad_bench/output'/*  \
+					'$(LIBSEFF)/bench/chameneos_bench/output'/*  \
+					'$(LIBSEFF_OLD)/bench/ad_bench/output'/*  \
+					'$(LIBSEFF_OLD)/bench/chameneos_bench/output'/*  \
+					'$(LIBSEFF)/bench/handler_stack_bench/output/new'/* \
+					'$(LIBSEFF)/bench/handler_stack_bench/output/orig'/*
+	hyperfine -N -m 50 --warmup 5 --export-csv results67.csv \
 					'$(NEW_BENCH_LOC)/countdown/main 200000000' \
 					'$(NEW_BENCH_LOC)/product_early/main 100000' \
 					'$(NEW_BENCH_LOC)/iterator/main 40000000' \
@@ -49,14 +60,6 @@ bench: build
 					'$(NEW_BENCH_LOC)/parsing_dollars/main 20000' \
 					'$(NEW_BENCH_LOC)/resume_nontail/main 20000' \
 					'$(NEW_BENCH_LOC)/handler_sieve/main 60000'         \
-					'$(LIBSEFF)/bench/ad_bench/output/[!.]* 50'  \
-					'$(LIBSEFF)/bench/chameneos_bench/output/[!.]* 50'  \
-					'$(LIBSEFF)/bench/skynet_bench/output/[!.]* 50'  \
-					'$(LIBSEFF_OLD)/bench/ad_bench/output/[!.]* 50'  \
-					'$(LIBSEFF_OLD)/bench/chameneos_bench/output/[!.]* 50'  \
-					'$(LIBSEFF_OLD)/bench/skynet_bench/output/[!.]* 50'  \
-					'$(LIBSEFF)/bench/handler_stack_bench/output/new/[!.]* 50' \
-					'$(LIBSEFF)/bench/handler_stack_bench/output/old/[!.]* 50' \
 					'$(OLD_BENCH_LOC)/countdown/main 200000000' \
 					'$(OLD_BENCH_LOC)/product_early/main 100000' \
 					'$(OLD_BENCH_LOC)/iterator/main 40000000' \

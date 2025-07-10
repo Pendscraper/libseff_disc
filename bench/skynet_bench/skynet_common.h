@@ -19,23 +19,31 @@ int runner(int argc, char **argv, skynet_t bench, const char *bench_name) {
     for (size_t i = 1; i < argc; i++) {
         if (strcmp(argv[i], "--threads") == 0) {
             if (i + 1 >= argc) {
+            	printf("star1 i:%d argc:%d\n", i, argc);
                 print_usage(argv[0]);
             }
             int res = sscanf(argv[i + 1], "%d", &n_workers);
             if (res <= 0 || n_workers <= 0) {
+            	printf("star2 i:%d argc:%d\n", i, argc);
                 print_usage(argv[0]);
             }
             i++;
         } else if (strcmp(argv[i], "--depth") == 0) {
             if (i + 1 >= argc) {
+            	printf("star3 i:%d argc:%d\n", i, argc);
                 print_usage(argv[0]);
             }
             int res = sscanf(argv[i + 1], "%d", &depth);
             if (res <= 0 || depth <= 0) {
+            	printf("star4 i:%d argc:%d\n", i, argc);
                 print_usage(argv[0]);
             }
             i++;
         } else {
+            printf("star5 i:%d argc:%d\n", i, argc);
+            for (int j = 0; j < argc; j++) {
+            	printf("argument %d is: %s\n", j, argv[j]);
+            }
             print_usage(argv[0]);
         }
     }

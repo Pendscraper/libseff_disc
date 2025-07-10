@@ -116,7 +116,7 @@ $(LIBHANDLER_CONFIG_NAME):
 	$(MAKE) VARIANT=${BUILD} -C bench/libhandler
 	mv bench/libhandler/tmp_config.txt bench/libhandler/out/config.txt
 
-bench: output/lib/libseff.a output/lib/libutils.a $(LIBHANDLER_CONFIG_NAME)
+bench: output/lib/libseff.a output/lib/libutils.a
 	for bench_dir in bench/*_bench/ ; do \
 		$(MAKE) BUILD=${BUILD} -C $${bench_dir} all ; \
 	done
@@ -154,5 +154,5 @@ clean:
 output/lib/libseff.a: output/seff_mem.o output/seff_mem_asm.o output/seff.o output/seff_asm.o | output/lib
 	ar -rcs output/lib/libseff.a output/seff_mem.o output/seff_mem_asm.o output/seff.o output/seff_asm.o
 
-output/lib/libutils.a: output/actors.o output/cl_queue.o output/tk_queue.o output/tl_queue.o output/scheff.o output/net.o output/http_response.o  | output/lib
+output/lib/libutils.a: $(LIBHANDLER_CONFIG_NAME) output/actors.o output/cl_queue.o output/tk_queue.o output/tl_queue.o output/scheff.o output/net.o output/http_response.o  | output/lib
 	ar -rcs $@ $^
