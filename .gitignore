@@ -56,7 +56,7 @@ asm/seff_types.S
 src/seff_types.h
 
 # Output folders
-output
+output/
 
 # Python cache
 decls/__pycache__
