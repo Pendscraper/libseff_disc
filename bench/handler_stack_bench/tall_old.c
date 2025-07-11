@@ -74,8 +74,8 @@ void* tracer(void* arg) {
 int main(int argc, char **argv) {
 	printf("yippee!!\n");
 	if (argc > 3) return 1;
-	uint64_t rotations = (argc >= 2) ? (uint64_t)argv[1] : 100000;
-	uint64_t depth = (argc == 3) ? (uint64_t)argv[2] : 6000;
+	uint64_t rotations = (argc >= 2) ? (uint64_t)argv[1] : 10000;
+	uint64_t depth = (argc == 3) ? (uint64_t)argv[2] : 600;
     seff_coroutine_t *k = seff_coroutine_new(tracer, (void*)(depth));
     effect_set handler = HANDLES(effBase);
     printf("cpoint1\n");
