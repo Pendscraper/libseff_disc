@@ -33,7 +33,7 @@
 extern __thread seff_coroutine_t *_seff_current_coroutine;
 
 seff_request_t seff_resume_handling_all(seff_coroutine_t *k, void *arg) {
-    return seff_resume(k, arg, ~0);
+    return seff_resume(k, arg, HANDLES_ALL);
 }
 
 void frame_push(seff_cont_t *cont, void *elt) {
@@ -128,12 +128,27 @@ bool seff_coroutine_init_sized(
     return true;
 }
 
+static inline bool _find_effect(effect_id effect, effect_set handled) {
+	if (handled == HANDLES_ALL) {
+		return true;
+	}
+	if (handled == NULL) { // this check exists solely because syscall wrappers seem to make the effect set null
+		return false;
+	}
+	int i = 0;
+	while (handled[i] != 0) {
+		if (effect == handled[i++]) {
+			return true;
+		}
+	};
+	return false;
+}
+
 seff_coroutine_t *seff_locate_handler(effect_id effect) {
-    effect_set mask = 1UL << effect;
     seff_coroutine_t *k = _seff_current_coroutine;
     if (effect != EFF_ID(return)) {
-        // Thee special 'return' effect is implicitly handled by every coroutine
-        while (k && !(k->handled_effects & mask)) {
+        // The special 'return' effect is implicitly handled by every coroutine
+        while (k && !_find_effect(effect, k->handled_effects)) {
             k = (seff_coroutine_t *)k->parent_coroutine;
         }
     }

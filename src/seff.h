@@ -100,7 +100,13 @@ E __attribute__((noreturn)) void seff_throw(effect_id eff_id, void *payload);
 #define EFF_ID(name) __##name##_eff_id
 #define EFF_PAYLOAD_T(name) __##name##_eff_payload
 #define EFF_RET_T(name) __##name##_eff_ret
-#define HANDLES(name) (1UL << EFF_ID(name))
+#define EFF_DEF_HANDLER(name) __##name##_eff_def_handler
+#define _HANDLES_BASE(...) ({static effect_id _____ef[] = {__VA_ARGS__}; (effect_set)_____ef;})
+#define HANDLES(...) _HANDLES_BASE(__VA_ARGS__, 0)
+#define HANDLES_TOPLEVEL(...) (effect_set){__VA_ARGS__, 0}
+
+#define HANDLES_ALL (effect_set)handles_all_pointer
+#define HANDLES_NONE _HANDLES_BASE(0)
 
 #define CASE_EFFECT(request, name, block)                                      \
     case EFF_ID(name): {                                                       \
@@ -126,6 +132,10 @@ E __attribute__((noreturn)) void seff_throw(effect_id eff_id, void *payload);
 typedef void EFF_RET_T(return);
 static const effect_id EFF_ID(return) = RETURN_EFFECT_ID;
 typedef void EFF_PAYLOAD_T(return);
+
+static const effect_set _handles_all_set = (effect_id[]){0}; // should never be accessed - this should be detected by a pointer comparison first
+static const void *handles_all_pointer = (void *)_handles_all_set;
+
 
 static inline bool seff_finished(seff_request_t req) { return req.effect == EFF_ID(return); }
 

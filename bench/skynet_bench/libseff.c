@@ -58,7 +58,7 @@ int64_t bench(int n_workers, int depth) {
 
     int64_t total = 0;
 
-    seff_request_t eff = seff_resume(root, NULL, EFF_ID(yield_int));
+    seff_request_t eff = seff_resume(root, NULL, HANDLES(EFF_ID(yield_int)));
     while (true) {
         switch (eff.effect) {
             CASE_EFFECT(eff, yield_int, {
@@ -69,7 +69,7 @@ int64_t bench(int n_workers, int depth) {
         default:
             assert(false);
         }
-        eff = seff_resume(root, NULL, EFF_ID(yield_int));
+        eff = seff_resume(root, NULL, HANDLES(EFF_ID(yield_int)));
     }
 
     return total;

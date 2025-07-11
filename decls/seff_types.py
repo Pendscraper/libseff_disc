@@ -58,8 +58,8 @@ else:
 
 
 max_effects = Defn('MAX_EFFECTS', arch.word_type.size * 8)
-effect_set = Typedef('effect_set', arch.word_type)
 effect_id = Typedef('effect_id', arch.word_type)
+effect_set = Typedef("effect_set", ptr(effect_id.ty))
 
 Defn('RETURN_EFFECT_ID', '0xFFFFFFFFFFFFFFFF')
 
