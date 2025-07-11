@@ -64,7 +64,7 @@ void *parent(void *args) {
 int main(void) {
     seff_coroutine_t *k = seff_coroutine_new(parent, NULL);
 
-    seff_request_t request = seff_resume(k, NULL, EFF_ID(print) | EFF_ID(read));
+    seff_request_t request = seff_resume(k, NULL, EFF_ID(print), EFF_ID(read));
     while (!seff_finished(request)) {
         void *response;
         switch (request.effect) {
@@ -81,7 +81,7 @@ int main(void) {
             assert(false);
             exit(-1);
         }
-        request = seff_resume(k, response, EFF_ID(print) | EFF_ID(read));
+        request = seff_resume(k, response, EFF_ID(print), EFF_ID(read));
     }
     seff_coroutine_delete(k);
 }

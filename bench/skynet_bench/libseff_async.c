@@ -179,7 +179,7 @@ void *worker_thread(void *_self) {
         }
 
         seff_request_t request =
-            seff_resume(current_task->coroutine, coroutine_arg, EFF_ID(async) | EFF_ID(await));
+            seff_resume(current_task->coroutine, coroutine_arg, EFF_ID(async), EFF_ID(await));
         switch (request.effect) {
             CASE_RETURN(request, {
                 debug(self->return_requests++);

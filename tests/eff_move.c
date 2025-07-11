@@ -60,11 +60,11 @@ void *bar(void *_child) {
 int main(void) {
     seff_coroutine_t *k = seff_coroutine_new(foo, NULL);
 
-    seff_request_t request = seff_resume(k, NULL, EFF_ID(get_name) | EFF_ID(print));
+    seff_request_t request = seff_resume(k, NULL, EFF_ID(get_name), EFF_ID(print));
     assert(request.effect == EFF_ID(get_name));
 
     char *main_name = "main";
-    request = seff_resume(k, main_name, EFF_ID(get_name) | EFF_ID(print));
+    request = seff_resume(k, main_name, EFF_ID(get_name), EFF_ID(print));
     assert(request.effect == EFF_ID(print));
     puts(((EFF_PAYLOAD_T(print) *)request.payload)->str);
 
