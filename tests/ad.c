@@ -22,7 +22,7 @@ typedef struct {
     double *dv;
 } prop_t;
 
-effect_set e_smooth = HANDLES(e_ap0) | HANDLES(e_ap1) | HANDLES(e_ap2);
+effect_set e_smooth = EFF_ID(e_ap0) | EFF_ID(e_ap1) | EFF_ID(e_ap2);
 
 double e_c(double x) { return *PERFORM(e_ap0, x); }
 double e_n(double x) { return *PERFORM(e_ap1, negate_op, x); }
@@ -40,7 +40,7 @@ DEFINE_EFFECT(r_ap2, 5, prop_t *, {
     prop_t arg2;
 });
 
-effect_set r_smooth = HANDLES(r_ap0) | HANDLES(r_ap1) | HANDLES(r_ap2);
+effect_set r_smooth = EFF_ID(r_ap0) | EFF_ID(r_ap1) | EFF_ID(r_ap2);
 
 prop_t r_c(double x) { return *PERFORM(r_ap0, x); }
 prop_t r_n(prop_t x) { return *PERFORM(r_ap1, negate_op, x); }

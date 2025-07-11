@@ -32,7 +32,7 @@ int main(void) {
     }
 
     for (size_t i = 0; i < 100000; i++) {
-        seff_request_t exn = seff_resume(&k, NULL, HANDLES(runtime_error));
+        seff_request_t exn = seff_resume(&k, NULL, EFF_ID(runtime_error));
         switch (exn.effect) {
             CASE_EFFECT(exn, runtime_error, { caught++; });
             break;

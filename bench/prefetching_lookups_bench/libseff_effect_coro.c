@@ -37,7 +37,7 @@ long SeffEffectMultiLookup(
             seff_coroutine_t *coro = task.coro;
             int64_t *toRead = task.extra;
             seff_request_t request =
-                seff_resume(coro, toRead ? (void *)*toRead : NULL, HANDLES(deref));
+                seff_resume(coro, toRead ? (void *)*toRead : NULL, EFF_ID(deref));
             switch (request.effect) {
                 CASE_RETURN(request, {
                     bool res = (bool)payload.result ? 1 : 0;
@@ -61,7 +61,7 @@ long SeffEffectMultiLookup(
         task_t task = coro_queue_dequeue(&q);
         seff_coroutine_t *coro = task.coro;
         int64_t *toRead = task.extra;
-        seff_request_t request = seff_resume(coro, toRead ? (void *)*toRead : NULL, HANDLES(deref));
+        seff_request_t request = seff_resume(coro, toRead ? (void *)*toRead : NULL, EFF_ID(deref));
 
         switch (request.effect) {
             CASE_RETURN(request, {

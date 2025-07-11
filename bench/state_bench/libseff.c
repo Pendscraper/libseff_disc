@@ -21,16 +21,16 @@ int main(int argc, char **argv) {
 
     int64_t value = 0;
 
-    seff_request_t request = seff_resume(k, NULL, HANDLES(put) | HANDLES(get));
+    seff_request_t request = seff_resume(k, NULL, EFF_ID(put) | EFF_ID(get));
     while (!seff_finished(request)) {
         switch (request.effect) {
             CASE_EFFECT(request, put, {
                 value = payload.value;
-                request = seff_resume(k, NULL, HANDLES(put) | HANDLES(get));
+                request = seff_resume(k, NULL, EFF_ID(put) | EFF_ID(get));
                 break;
             });
             CASE_EFFECT(request, get, {
-                request = seff_resume(k, (void *)value, HANDLES(put) | HANDLES(get));
+                request = seff_resume(k, (void *)value, EFF_ID(put) | EFF_ID(get));
                 break;
             });
         }

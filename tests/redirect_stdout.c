@@ -23,7 +23,7 @@ void *with_output_to_buffer(seff_start_fun_t *fn, void *arg, char *buffer) {
     char *buffptr = buffer;
 
     while (true) {
-        seff_request_t res = seff_resume(&k, NULL, HANDLES(print));
+        seff_request_t res = seff_resume(&k, NULL, EFF_ID(print));
         switch (res.effect) {
             CASE_EFFECT(res, print, {
                 // Note we are NOT using strcpy!
