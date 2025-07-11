@@ -66,7 +66,7 @@ void execute(size_t meetings, colour *creatures, size_t creaturesSize) {
         chameneos_meet_t meetMsg;
         meetMsg.finish = true;
         // First resume
-        total_meetings += (uint64_t)seff_resume(chms[i], (void *)&meetMsg, EFF_ID(meet)).payload;
+        total_meetings += (uint64_t)seff_resume(chms[i], (void *)&meetMsg, EFF_ID(meet))).payload;
     }
 
     spell_int(total_meetings);

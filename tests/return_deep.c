@@ -9,7 +9,7 @@ int64_t stacky(int64_t a) {
         return stacky(a - 1);
     }
     // PERFORM_DIRECT(k, return, (void *)54321);
-    seff_exit(seff_current_coroutine(), EFF_ID(return), (void *)54321);
+    seff_exit(seff_current_coroutine(), EFF_ID(return)), (void *)54321);
     return 1;
 }
 
