@@ -9,8 +9,8 @@ void put(seff_coroutine_t *handler, int64_t number) { YIELD(handler, put, number
 int64_t get(seff_coroutine_t *handler) { return YIELD(handler, get); }
 
 void *stateful(void *_arg) {
-    seff_coroutine_t *put_handler = seff_locate_handler(EFF_ID(put));
-    seff_coroutine_t *get_handler = seff_locate_handler(EFF_ID(get));
+    seff_coroutine_t *put_handler = seff_locate_handler(HANDLES(EFF_ID(put));
+    seff_coroutine_t *get_handler = seff_locate_handler(HANDLES(EFF_ID(get));
     for (int i = 0; i < 10000000; i++) {
         put(put_handler, get(get_handler) + 1);
     }

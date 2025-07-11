@@ -28,7 +28,7 @@ void *div_by_zero_crash(void *arg) {
 
 extern size_t default_frame_size;
 int main(void) {
-    seff_set_default_handler(EFF_ID(division_by_zero), div_by_zero_crash);
+    seff_set_default_handler(HANDLES(EFF_ID(division_by_zero), div_by_zero_crash);
     seff_coroutine_t k;
     seff_coroutine_init(&k, safe_computation, NULL);
 
