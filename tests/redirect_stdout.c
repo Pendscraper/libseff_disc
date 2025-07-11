@@ -44,7 +44,7 @@ void *with_output_to_default(seff_start_fun_t *fn, void *arg) {
     seff_coroutine_init(&k, fn, arg);
 
     seff_request_t res = seff_resume(&k, NULL, 0);
-    assert(res.effect == EFF_ID(return));
+    assert(res.effect == HANDLES(EFF_ID(return));
     return res.payload;
 }
 
@@ -55,7 +55,7 @@ void *printer(void *arg) {
 }
 
 int main(void) {
-    seff_set_default_handler(HANDLES(EFF_ID(print), default_print);
+    seff_set_default_handler(HANDLES(HANDLES(EFF_ID(print), default_print);
     with_output_to_default(printer, NULL);
     char buffer[512] = {0};
     with_output_to_buffer(printer, NULL, buffer);

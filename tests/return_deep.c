@@ -25,7 +25,7 @@ int main(void) {
         seff_coroutine_t *k = seff_coroutine_new(fn, (void *)(10 * 1000));
 
         seff_request_t req = seff_resume_handling_all(k, NULL);
-        assert(req.effect == EFF_ID(return));
+        assert(req.effect == HANDLES(EFF_ID(return));
         int64_t ret = (int64_t)req.payload;
 
         printf("RES: %ld\n", ret);

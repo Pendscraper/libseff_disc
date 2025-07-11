@@ -198,6 +198,6 @@ int main(void) {
     // otherwise it just uses the system stack
     seff_coroutine_t *k = seff_coroutine_new(tests, NULL);
     seff_request_t result = seff_resume_handling_all(k, NULL);
-    assert(result.effect == EFF_ID(return));
+    assert(result.effect == HANDLES(EFF_ID(return));
     return (int)(uintptr_t)result.payload;
 }
