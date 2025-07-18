@@ -15,8 +15,8 @@ BUILD        := debug
 STACK_POLICY := segmented
 ARCH         := x86-64
 
-CC  := clang-18
-CXX := clang++-18
+CC  := clang-16
+CXX := clang++-16
 PY  := python3
 LD  := $(shell which ld.gold)
 
@@ -108,7 +108,7 @@ test: output/lib/libseff.a output/lib/libutils.a ./tests/*.c
 		$(MAKE) output/$${test%%.*} ; \
 	done
 
-bench: output/lib/libseff.a output/lib/libutils.a
+bench: output/lib/libseff.a output/lib/libutils.a bench/libhandler/out/config.txt
 	for bench_dir in bench/*_bench/ ; do \
 		$(MAKE) BUILD=${BUILD} -C $${bench_dir} all ; \
 	done
@@ -122,6 +122,9 @@ compile_commands.json:
 	 | grep -w '\-c' \
 	 | jq -nR '[inputs|{directory:"$(shell pwd)", command:., file: match(" [^ ]+$$").string[1:]}]' \
 	 > compile_commands.json
+
+bench/libhandler/out/config.txt:
+	cd bench/libhandler; ./configure
 
 output:
 	mkdir $@
@@ -146,5 +149,5 @@ clean:
 output/lib/libseff.a: output/seff_mem.o output/seff_mem_asm.o output/seff.o output/seff_asm.o | output/lib
 	ar -rcs output/lib/libseff.a output/seff_mem.o output/seff_mem_asm.o output/seff.o output/seff_asm.o
 
-output/lib/libutils.a: output/actors.o output/cl_queue.o output/tk_queue.o output/tl_queue.o output/scheff.o output/net.o output/http_response.o  | output/lib
+output/lib/libutils.a: $(LIBHANDLER_CONFIG_NAME) output/actors.o output/cl_queue.o output/tk_queue.o output/tl_queue.o output/scheff.o output/net.o output/http_response.o  | output/lib
 	ar -rcs $@ $^

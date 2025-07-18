@@ -189,7 +189,7 @@ void *evaluate(seff_coroutine_t *k, void *args) {
 }
 
 int main(int argc, char **argv) {
-    size_t iters = 100;
+    size_t iters = 100000;
     if (argc == 2) {
         sscanf(argv[1], "%lu", &iters);
     }

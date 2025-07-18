@@ -16,8 +16,8 @@ BUILD := debug
 ROOT_DIR := ../../
 DEPS_DIR := ../
 
-CC := clang-18
-CXX := clang++-18
+CC := clang-16
+CXX := clang++-16
 PY := python3
 LD := $(shell which ld.gold)
 
