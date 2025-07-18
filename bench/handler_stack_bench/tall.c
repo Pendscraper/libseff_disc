@@ -65,7 +65,7 @@ void* tracer(void* arg) {
 		for (int i = 0; i < times; i++) {
 			original = seff_locate_handler(EFF_ID(effBase));
 		}
-		printf("%p found %d times", (void*)original, (int)times);
+		printf("%p found %d times\n", (void*)original, (int)times);
 	}
 	return (void*)76;
 }

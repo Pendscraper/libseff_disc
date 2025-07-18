@@ -1,15 +1,15 @@
-LIBSEFF     := /afs/inf.ed.ac.uk/user/s21/s2181033/libseff_disc
+LIBSEFF     := ../../
 LIBSEFF_H   := $(LIBSEFF)/src
 LIBSEFF_LIB := $(LIBSEFF)/output/lib
 
-LIBSEFF_OLD     := /afs/inf.ed.ac.uk/user/s21/s2181033/libseff_disc/bench/libseff
+LIBSEFF_OLD     := ../../bench/libseff
 LIBSEFF_OLD_H   := $(LIBSEFF_OLD)/src
-LIBSEFF_OLD_LIB := $(LIBSEFF_OLD)/output/lib
+LIBSEFF_OLD_LIB := $(LIBSEFF_OLD)/utput/lib
 
 NEW_BENCH_LOC := libseff_bench_from_internet
 OLD_BENCH_LOC := libseff_bench_old
 
-CC               := clang-18
+CC               := clang-16
 CC_COMPILE_FLAGS := -std=gnu99 -O3 -I$(LIBSEFF_H) -fsplit-stack
 CC_COMPILE_FLAGS_OLD := -std=gnu99 -O3 -I$(LIBSEFF_OLD_H) -fsplit-stack
 CC_WARN_FLAGS    := -Wall -Wextra \
@@ -34,7 +34,9 @@ test_cmd_old    = cd $(OLD_BENCH_LOC)/$(1) ; ./main $(2) > actual ; echo $(3) > 
 
 all: build
 
-bench: build
+bench:
+	$(MAKE) -C $(LIBSEFF) bench
+	$(MAKE) -C $(LIBSEFF_OLD) bench
 	-rm $(LIBSEFF)/bench/ad_bench/output/*.o
 	-rm $(LIBSEFF)/bench/chameneos_bench/output/*.o
 	-rm $(LIBSEFF)/bench/skynet_bench/output/*.o
@@ -43,15 +45,14 @@ bench: build
 	-rm $(LIBSEFF_OLD)/bench/skynet_bench/output/*.o
 	-rm $(LIBSEFF)/bench/chameneos_bench/output/posix
 	-rm $(LIBSEFF_OLD)/bench/chameneos_bench/output/posix
+	-rm $(LIBSEFF)/bench/exception_nested_bench/output/libseff_norecycle
+	-rm $(LIBSEFF_OLD)/bench/exception_nested_bench/output/libseff_norecycle
 	hyperfine --warmup 5 -N -m 50 --export-csv resultsNew.csv \
-					'$(LIBSEFF)/bench/skynet_bench/output'/*  \
-					'$(LIBSEFF_OLD)/bench/skynet_bench/output'/*  \
-					'$(LIBSEFF)/bench/ad_bench/output'/*  \
-					'$(LIBSEFF)/bench/chameneos_bench/output'/*  \
-					'$(LIBSEFF_OLD)/bench/ad_bench/output'/*  \
-					'$(LIBSEFF_OLD)/bench/chameneos_bench/output'/*  \
+					'$(LIBSEFF)/bench'/*_bench/output/* \
+					'$(LIBSEFF_OLD)/bench'/*_bench/output/*  \
 					'$(LIBSEFF)/bench/handler_stack_bench/output/new'/* \
 					'$(LIBSEFF)/bench/handler_stack_bench/output/orig'/*
+nuh:
 	hyperfine -N -m 50 --warmup 5 --export-csv results67.csv \
 					'$(NEW_BENCH_LOC)/countdown/main 200000000' \
 					'$(NEW_BENCH_LOC)/product_early/main 100000' \

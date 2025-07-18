@@ -16,8 +16,8 @@ BUILD := debug
 ROOT_DIR := ../../
 DEPS_DIR := ../
 
-CC := clang-18
-CXX := clang++-18
+CC := clang-16
+CXX := clang++-16
 PY := python3
 LD := $(shell which ld.gold)
 
@@ -93,7 +93,7 @@ ${DEPS_DIR}/cppcoro/tools/cake/src/run.py:
 CPPCORO_LIB := ${DEPS_DIR}/cppcoro/build/libcppcoro.a
 $(CPPCORO_LIB): ${DEPS_DIR}/cppcoro/tools/cake/src/run.py
 	cd ${DEPS_DIR}/cppcoro; \
-	python3 tools/cake/src/run.py --debug=run release=optimised --clang-executable=$(CC) lib/build.cake; \
+	python2.7 tools/cake/src/run.py --debug=run release=optimised --clang-executable=$(CC) lib/build.cake; \
 	cp build/*/lib/*.a build/
 
 LIBCO_LIB := ${DEPS_DIR}/libco/lib/libcolib.a
@@ -138,4 +138,4 @@ ${DEPS_DIR}/picohttpparser/build/picohttpparser.o: ${DEPS_DIR}/picohttpparser/pi
 	$(CC) $(CFLAGS) -o $@ -c $<
 
 $(PICOHTTP_LIB): ${DEPS_DIR}/picohttpparser/build/picohttpparser.o | ${DEPS_DIR}/picohttpparser/build
-	llvm-ar-12 -rcs $@ $<
+	llvm-ar-18 -rcs $@ $<

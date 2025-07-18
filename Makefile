@@ -15,8 +15,8 @@ BUILD        := release
 STACK_POLICY := segmented
 ARCH         := x86-64
 
-CC  := clang-18
-CXX := clang++-18
+CC  := clang-16
+CXX := clang++-16
 PY  := python3
 LD  := $(shell which ld.gold)
 

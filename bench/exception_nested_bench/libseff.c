@@ -11,7 +11,6 @@ DEFINE_EFFECT(runtime_error, void, { char *msg; });
 #define KB (1024)
 
 seff_coroutine_t children[MAX_DEPTH];
-size_t caught = 0;
 
 void *computation(void *_arg) {
     int64_t depth = (int64_t)_arg;
@@ -19,22 +18,13 @@ void *computation(void *_arg) {
         THROW(runtime_error, "error");
     } else {
         seff_coroutine_init(&children[depth], computation, (void *)(depth - 1));
-        seff_request_t exn = seff_resume(&children[depth], NULL, HANDLES(runtime_error));
-        SWITCH_EFFECT(exn, {
-            CASE_EFFECT(runtime_error, {
-                caught++;
-                THROW(runtime_error, payload.msg);
-                break;
-            })
-		    CASE_DEFAULT(
-		        assert(false);
-		    )
-        })
+        seff_resume(&children[depth], NULL, 0);
     }
     return NULL;
 }
 
 int main(void) {
+    size_t caught = 0;
     seff_coroutine_t k;
     seff_coroutine_init_sized(&k, computation, (void *)(MAX_DEPTH - 1), 16 * KB);
     for (size_t depth = 0; depth < MAX_DEPTH; depth++) {
@@ -42,14 +32,12 @@ int main(void) {
     }
 
     for (size_t i = 0; i < 100000; i++) {
-        seff_request_t exn = seff_resume(&k, NULL, HANDLES(runtime_error));
-        SWITCH_EFFECT(exn, {
-            CASE_EFFECT(exn, runtime_error, {
-                caught++;
-                break;
-            })
-        	CASE_DEFAULT(
-            	assert(false);
+        seff_request_t exn = seff_resume(&k, NULL, HANDLES(EFF_ID(runtime_error)));
+        CASE_SWITCH(exn, {
+            CASE_EFFECT(runtime_error, { caught++; break;});
+            
+		    CASE_DEFAULT(
+		        assert(false);
             )
         })
         seff_coroutine_init_sized(&k, computation, (void *)(MAX_DEPTH - 1), 16 * KB);
