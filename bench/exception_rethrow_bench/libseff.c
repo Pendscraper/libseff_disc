@@ -40,7 +40,7 @@ int main(void) {
         seff_coroutine_init_sized(&children[depth], computation, NULL, 16 * KB);
     }
 
-    for (size_t i = 0; i < 100000; i++) {
+    for (size_t i = 0; i < 10000; i++) {
         seff_request_t exn = seff_resume(&k, NULL, HANDLES(runtime_error));
         switch (exn.effect) {
             CASE_EFFECT(exn, runtime_error, {
