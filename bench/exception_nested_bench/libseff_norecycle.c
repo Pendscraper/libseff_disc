@@ -25,7 +25,7 @@ void *computation(void *_arg) {
 int main(void) {
     size_t caught = 0;
 
-    for (size_t i = 0; i < 10000; i++) {
+    for (size_t i = 0; i < 5000; i++) {
         seff_coroutine_t *k = seff_coroutine_new(computation, (void *)(MAX_DEPTH - 1));
         seff_request_t exn = seff_resume(k, NULL, HANDLES(runtime_error));
         switch (exn.effect) {

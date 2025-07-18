@@ -22,7 +22,7 @@ void *computation(size_t depth) {
 int main(void) {
     size_t caught = 0;
 
-    for (size_t i = 0; i < 10000; i++) {
+    for (size_t i = 0; i < 5000; i++) {
         try {
             computation(MAX_DEPTH - 1);
         } catch (runtime_error exn) {
