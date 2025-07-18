@@ -13,7 +13,7 @@ void *computation(void) { throw runtime_error(error_msg); }
 
 int main(void) {
     size_t caught = 0;
-    for (size_t i = 0; i < 1000000; i++) {
+    for (size_t i = 0; i < 100000; i++) {
         try {
             computation();
         } catch (runtime_error exn) {

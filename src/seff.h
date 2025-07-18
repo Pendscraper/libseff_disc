@@ -190,8 +190,9 @@ static inline bool seff_finished(seff_request_t req) { return req.effect == EFF_
     })
 
 #ifndef NDEBUG
+E bool seff_find_effect_in(effect_id, effect_set);
 #define ASSERT_HANDLES(coroutine, name) \
-    assert((EFF_ID(name) == EFF_ID(return)) || (coroutine->handled_effects & HANDLES(name)))
+    assert(seff_find_effect_in(EFF_ID(name), coroutine->handled_effects))
 #else
 #define ASSERT_HANDLES(coroutine, name)
 #endif

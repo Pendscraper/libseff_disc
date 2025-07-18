@@ -127,7 +127,7 @@ $(LIBHANDLER_LIB):
 LIBSEFF_OG_LIB := ${LIBSEFF_OG_LIB_LOC}/output/lib/libseff.a
 
 $(LIBSEFF_OG_LIB): ${LIBSEFF_OG_LIB_LOC}/src/seff.c ${LIBSEFF_OG_LIB_LOC}/src/seff.h
-	$(MAKE) VARIANT=${BUILD} -C ${LIBSEFF_OG_LIB_LOC} output/lib/libseff.a
+	$(MAKE) BUILD=${BUILD} -C ${LIBSEFF_OG_LIB_LOC} output/lib/libseff.a output/lib/libutils.a
 
 PICOHTTP_LIB := ${DEPS_DIR}/picohttpparser/build/picohttpparser.a
 

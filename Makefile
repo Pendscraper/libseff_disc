@@ -11,7 +11,7 @@
 # See the Mulan PSL v2 for more details.
 #
 
-BUILD        := release
+BUILD        := debug
 STACK_POLICY := segmented
 ARCH         := x86-64
 
@@ -147,6 +147,7 @@ clean:
 	rm -rf output
 	rm -f asm/seff_types.S
 	rm -f src/seff_types.h
+	$(MAKE) BUILD=${BUILD} -C bench/libseff clean
 	for bench_dir in bench/*_bench/ ; do \
 		$(MAKE) -C $${bench_dir} clean ; \
 	done

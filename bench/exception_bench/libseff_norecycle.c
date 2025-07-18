@@ -10,7 +10,7 @@ void *computation(void *_arg) { THROW(runtime_error, "error"); }
 
 int main(void) {
     size_t caught = 0;
-    for (size_t i = 0; i < 1000000; i++) {
+    for (size_t i = 0; i < 100000; i++) {
         seff_coroutine_t *k = seff_coroutine_new(computation, NULL);
         seff_request_t exn = seff_resume(k, NULL, HANDLES(EFF_ID(runtime_error)));
         CASE_SWITCH(exn, {

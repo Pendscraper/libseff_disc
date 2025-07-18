@@ -2,6 +2,8 @@ LIBSEFF     := ../../
 LIBSEFF_H   := $(LIBSEFF)/src
 LIBSEFF_LIB := $(LIBSEFF)/output/lib
 
+BUILD = release
+
 LIBSEFF_OLD     := ../../bench/libseff
 LIBSEFF_OLD_H   := $(LIBSEFF_OLD)/src
 LIBSEFF_OLD_LIB := $(LIBSEFF_OLD)/utput/lib
@@ -35,8 +37,10 @@ test_cmd_old    = cd $(OLD_BENCH_LOC)/$(1) ; ./main $(2) > actual ; echo $(3) > 
 all: build
 
 bench:
-	$(MAKE) -C $(LIBSEFF) bench
-	$(MAKE) -C $(LIBSEFF_OLD) bench
+	$(MAKE) BUILD=${BUILD} -C $(LIBSEFF) clean
+	$(MAKE) BUILD=${BUILD} -C $(LIBSEFF) bench
+	$(MAKE) BUILD=${BUILD} -C $(LIBSEFF_OLD) clean
+	$(MAKE) BUILD=${BUILD} -C $(LIBSEFF_OLD) bench
 	-rm $(LIBSEFF)/bench/ad_bench/output/*.o
 	-rm $(LIBSEFF)/bench/chameneos_bench/output/*.o
 	-rm $(LIBSEFF)/bench/skynet_bench/output/*.o
@@ -45,13 +49,10 @@ bench:
 	-rm $(LIBSEFF_OLD)/bench/skynet_bench/output/*.o
 	-rm $(LIBSEFF)/bench/chameneos_bench/output/posix
 	-rm $(LIBSEFF_OLD)/bench/chameneos_bench/output/posix
-	-rm $(LIBSEFF)/bench/exception_nested_bench/output/libseff_norecycle
-	-rm $(LIBSEFF_OLD)/bench/exception_nested_bench/output/libseff_norecycle
-	hyperfine --warmup 5 -N -m 50 --export-csv resultsNew.csv \
+	hyperfine --warmup 5 -N --export-csv resultsNew.csv \
+					'$(LIBSEFF_OLD)/bench'/*_bench/output/* \
 					'$(LIBSEFF)/bench'/*_bench/output/* \
-					'$(LIBSEFF_OLD)/bench'/*_bench/output/*  \
-					'$(LIBSEFF)/bench/handler_stack_bench/output/new'/* \
-					'$(LIBSEFF)/bench/handler_stack_bench/output/orig'/*
+					'$(LIBSEFF)/bench/handler_stack_bench/output_old'/*
 nuh:
 	hyperfine -N -m 50 --warmup 5 --export-csv results67.csv \
 					'$(NEW_BENCH_LOC)/countdown/main 200000000' \
