@@ -85,7 +85,7 @@ int main() {
     execute(600, firstCreatures, firstCreaturesSize);
     printf("\n");
 
-    execute(600, secondCreatures, secondCreaturesSize);
+    execute(6000, secondCreatures, secondCreaturesSize);
     printf("\n");
 
     return 0;

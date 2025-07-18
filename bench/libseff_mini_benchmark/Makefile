@@ -49,7 +49,7 @@ bench:
 	-rm $(LIBSEFF_OLD)/bench/skynet_bench/output/*.o
 	-rm $(LIBSEFF)/bench/chameneos_bench/output/posix
 	-rm $(LIBSEFF_OLD)/bench/chameneos_bench/output/posix
-	hyperfine --warmup 5 -N --export-csv resultsNew.csv \
+	hyperfine --warmup 3 -N -m 20 --export-json resultsNew.json --export-csv resultsNew.csv \
 					'$(LIBSEFF_OLD)/bench'/*_bench/output/* \
 					'$(LIBSEFF)/bench'/*_bench/output/* \
 					'$(LIBSEFF)/bench/handler_stack_bench/output_old'/*

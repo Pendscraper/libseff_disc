@@ -173,7 +173,7 @@ int main(void) {
         broker_init_t *init = malloc(sizeof(broker_init_t));
         init->creatureColours = secondCreatures;
         init->numberOfCreatures = secondCreaturesSize;
-        init->meetings = 600;
+        init->meetings = 6000;
 
         execute_chameneos(init);
     }
