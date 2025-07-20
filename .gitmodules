@@ -32,3 +32,7 @@
 [submodule "bench/internet_micro_bench/old"]
 	path = bench/internet_micro_bench/old
 	url = https://github.com/effect-handlers/effect-handlers-bench.git
+[submodule "bench/libseff_goat"]
+	path = bench/libseff_goat
+	url = https://github.com/Pendscraper/libseff_disc.git
+	branch = new_and_improved

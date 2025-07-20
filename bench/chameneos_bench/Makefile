@@ -1,4 +1,4 @@
-all: output/posix output/chameneos_actors output/chameneos_effect_direct output/chameneos_effect_actors
+all: output/chameneos_actors output/chameneos_effect_direct output/chameneos_effect_actors
 
 include ../common.mk
 
