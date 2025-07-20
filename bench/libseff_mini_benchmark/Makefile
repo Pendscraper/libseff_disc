@@ -47,8 +47,8 @@ bench:
 	-rm $(LIBSEFF_OLD)/bench/ad_bench/output/*.o
 	-rm $(LIBSEFF_OLD)/bench/chameneos_bench/output/*.o
 	-rm $(LIBSEFF_OLD)/bench/skynet_bench/output/*.o
-	-rm $(LIBSEFF)/bench/chameneos_bench/output/posix
-	-rm $(LIBSEFF_OLD)/bench/chameneos_bench/output/posix
+	-rm $(LIBSEFF)/bench/chameneos_bench/output/*
+	-rm $(LIBSEFF_OLD)/bench/chameneos_bench/output/*
 	hyperfine --warmup 3 -N -m 20 --export-json resultsNew.json --export-csv resultsNew.csv \
 					'$(LIBSEFF_OLD)/bench'/*_bench/output/* \
 					'$(LIBSEFF)/bench'/*_bench/output/* \

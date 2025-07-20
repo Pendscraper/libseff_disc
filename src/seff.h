@@ -105,7 +105,7 @@ E __attribute__((noreturn)) void seff_throw(effect_id eff_id, void *payload);
 #define EFF_DEF_HANDLER(name) __##name##_eff_def_handler
 #define _HANDLES_BASE(...) ({static effect_id _____ef[] = {__VA_ARGS__}; (effect_set)_____ef;})
 #define HANDLES(...) _HANDLES_BASE(__VA_ARGS__, 0)
-#define HANDLES_TOPLEVEL(...) (effect_set){__VA_ARGS__, 0}
+#define HANDLES_TOPLEVEL(...) (effect_id[]){__VA_ARGS__, 0}
 
 #define HANDLES_ALL (effect_set)handles_all_pointer
 #define HANDLES_NONE _HANDLES_BASE(0)
