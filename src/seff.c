@@ -135,12 +135,10 @@ bool seff_find_effect_in(effect_id effect, effect_set handled) {
 	if (handled == NULL) { // this check exists solely because syscall wrappers seem to make the effect set null
 		return false;
 	}
-	int i = 0;
-	while (handled[i] != 0) {
-		if (effect == handled[i++]) {
+	for (int i = 1; i <= handled[0]; i++) {
+		if (handled[i] == effect)
 			return true;
-		}
-	};
+	}
 	return false;
 }
 

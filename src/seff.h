@@ -103,12 +103,11 @@ E __attribute__((noreturn)) void seff_throw(effect_id eff_id, void *payload);
 #define EFF_PAYLOAD_T(name) __##name##_eff_payload
 #define EFF_RET_T(name) __##name##_eff_ret
 #define EFF_DEF_HANDLER(name) __##name##_eff_def_handler
-#define _HANDLES_BASE(...) ({static effect_id _____ef[] = {__VA_ARGS__}; (effect_set)_____ef;})
-#define HANDLES(...) _HANDLES_BASE(__VA_ARGS__, 0)
-#define HANDLES_TOPLEVEL(...) (effect_id[]){__VA_ARGS__, 0}
+#define HANDLES(...) (effect_id[]){(uint64_t)(sizeof((effect_id[]){__VA_ARGS__})/sizeof(effect_id)), __VA_ARGS__}
+#define HANDLES_TOPLEVEL(...) HANDLES(__VA_ARGS__)
 
 #define HANDLES_ALL (effect_set)handles_all_pointer
-#define HANDLES_NONE _HANDLES_BASE(0)
+#define HANDLES_NONE (effect_id[]){0}
 
 #define ALLOC_NEW_STATIC_ID() ({static effect_id _____id = &_____id; _____id;})
 

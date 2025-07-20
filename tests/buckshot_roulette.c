@@ -18,13 +18,16 @@ typedef struct {
 } Setup;
 
 void *turn(void *setup) {
+	printf("entered player\n");
 	
 	int health = ((Setup*)setup)->health;
 	for (int i = 0; i < 10; i++) {
 		Item current = ((Setup*)setup)->items[i];
 		if (current == DOUBLE) {
 			health = health + 1;
+			printf("health increased!\n");
 		}
+		printf("ending turn\n");
 		PERFORM(end_turn, current);
 	};
 	
@@ -49,9 +52,14 @@ int main(void) {
 	};
 	int currentPlayer = 0;
 	bool forward = true;
+
+	printf("Players initialised\n");
+	effect_set handled = HANDLES(EFF_ID(end_turn));
+	printf("Handler values: %lu %lu\n", handled[0], handled[1]);
 	
 	while (true) {
-    	seff_request_t request = seff_resume(players[currentPlayer], NULL, HANDLES(EFF_ID(end_turn)));
+    	seff_request_t request = seff_resume(players[currentPlayer], NULL, handled);
+	printf("Player %d played\n", currentPlayer);
     	CASE_SWITCH(request, {
     		
 		    CASE_EFFECT(end_turn, {
