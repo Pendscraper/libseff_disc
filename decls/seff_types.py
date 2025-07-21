@@ -75,7 +75,7 @@ else:
 
 
 effect_id = Typedef('effect_id', arch.word_type)
-effect_set = Typedef("effect_set", ptr(effect_id.ty))
+effect_set = Typedef("effect_set", ptr(named_ty("SimpleSet", 17)))
 
 eff = Struct('seff_request_t',
     Field('effect', effect_id.ty),

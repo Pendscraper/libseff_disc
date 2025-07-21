@@ -22,7 +22,7 @@ typedef struct {
     double *dv;
 } prop_t;
 
-HANDLES_TOPLEVEL(e_smooth, EFF_ID(e_ap0), EFF_ID(e_ap1), EFF_ID(e_ap2));
+static effect_set e_smooth;
 
 double e_c(double x) { return *PERFORM(e_ap0, x); }
 double e_n(double x) { return *PERFORM(e_ap1, negate_op, x); }
@@ -40,7 +40,7 @@ DEFINE_EFFECT(r_ap2, prop_t *, {
     prop_t arg2;
 });
 
-HANDLES_TOPLEVEL(r_smooth, EFF_ID(r_ap0), EFF_ID(r_ap1), EFF_ID(r_ap2));
+static effect_set r_smooth;
 
 prop_t r_c(double x) { return *PERFORM(r_ap0, x); }
 prop_t r_n(prop_t x) { return *PERFORM(r_ap1, negate_op, x); }
@@ -235,6 +235,9 @@ void *evaluate(seff_coroutine_t *k, void *args) {
 }
 
 int main(int argc, char **argv) {
+    e_smooth = HANDLES(EFF_ID(e_ap0), EFF_ID(e_ap1), EFF_ID(e_ap2));
+    r_smooth = HANDLES(EFF_ID(r_ap0), EFF_ID(r_ap1), EFF_ID(r_ap2));
+
     size_t iters = 100000;
     if (argc == 2) {
         sscanf(argv[1], "%lu", &iters);

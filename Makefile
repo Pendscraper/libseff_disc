@@ -73,6 +73,9 @@ output/seff_mem.o: src/mem/seff_mem_${STACK_POLICY}.c src/mem/seff_mem.h src/sef
 output/seff_mem_asm.o: src/mem/seff_mem_${STACK_POLICY}.S | output
 	$(CC) $(CFLAGS) -I./src -o output/seff_mem_asm.o -c src/mem/seff_mem_${STACK_POLICY}.S
 
+output/set_impl.o: src/set.c src/set.h | output
+	$(CC) $(CFLAGSCOMMON) -I./src -o output/set_impl.o -c src/set.c
+
 
 output/actors.o: src/seff.h src/seff_types.h scheduler/scheff.h utils/actors.h utils/actors.c | output/lib
 	$(CC) $(CFLAGS) -I./src -I./utils -I./scheduler -o output/actors.o -c utils/actors.c
@@ -159,8 +162,8 @@ clean:
 		$(MAKE) -C $${bench_dir} clean ; \
 	done
 
-output/lib/libseff.a: output/seff_mem.o output/seff_mem_asm.o output/seff.o output/seff_asm.o | output/lib
-	ar -rcs output/lib/libseff.a output/seff_mem.o output/seff_mem_asm.o output/seff.o output/seff_asm.o
+output/lib/libseff.a: output/seff_mem.o output/seff_mem_asm.o output/seff.o output/seff_asm.o output/set_impl.o | output/lib
+	ar -rcs output/lib/libseff.a output/seff_mem.o output/seff_mem_asm.o output/seff.o output/seff_asm.o output/set_impl.o
 
 output/lib/libutils.a: $(LIBHANDLER_CONFIG_NAME) output/actors.o output/cl_queue.o output/tk_queue.o output/tl_queue.o output/scheff.o output/net.o output/http_response.o  | output/lib
 	ar -rcs $@ $^

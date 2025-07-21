@@ -129,16 +129,39 @@ bool seff_coroutine_init_sized(
     return true;
 }
 
+effect_set __make_effect_set(effect_id *ids, size_t count) {
+    SimpleSet *s = malloc(sizeof(SimpleSet));
+    set_init_alt(s, 1024, NULL);
+    for (size_t i = 0; i < count; i++) {
+        char buff[sizeof(effect_id) / sizeof(char) + 1];
+        sprintf(buff, "%lu", ids[i]);
+        set_add(s, buff);
+    }
+    return s;
+}
+
 bool seff_find_effect_in(effect_id effect, effect_set handled) {
+	printf("ergh\n");
 	if (handled == HANDLES_ALL) {
 		return true;
 	}
 	if (handled == NULL) { // this check exists solely because syscall wrappers seem to make the effect set null
 		return false;
 	}
-	char buff[sizeof(effect_id) / sizeof(char) + 1];
+	char *buff = malloc(128 * sizeof(char));
 	sprintf(buff, "%lu", effect);
-	return set_contains(&handled, buff);
+	printf("rtbw54\n");
+	printf("hasher: %p\n", (void *)handled->hash_function);
+	printf("hasher: %p\n", (void *)&__default_hash);
+	printf("%s\n", buff);
+	printf("testng:\n");
+	printf("%lu\n", __default_hash("1"));
+	printf("back!!\n");
+	printf("%lu\n", set_length(handled));
+	bool a = set_contains(handled, buff) == SET_TRUE;
+	printf("erbe\n");
+	free(buff);
+	return a;
 }
 
 seff_coroutine_t *seff_locate_handler(effect_id effect) {
@@ -149,6 +172,7 @@ seff_coroutine_t *seff_locate_handler(effect_id effect) {
             k = (seff_coroutine_t *)k->parent_coroutine;
         }
     }
+    printf("found: %p\n", (void *)k);
     return k;
 }
 

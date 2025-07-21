@@ -18,6 +18,7 @@
 extern "C" {
 #endif
 
+#include <stddef.h>
 #include <inttypes.h>       /* uint64_t */
 
 
@@ -187,6 +188,8 @@ char** set_to_array(SimpleSet *set, uint64_t *size);
 int set_cmp(SimpleSet *left, SimpleSet *right);
 
 // void set_printf(SimpleSet *set);                                           /* TODO: implement */
+
+uint64_t __default_hash(const char *key);
 
 #define SET_TRUE 0
 #define SET_FALSE -1

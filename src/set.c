@@ -17,7 +17,7 @@
 #define MAX_FULLNESS_PERCENT 0.25       /* arbitrary */
 
 /* PRIVATE FUNCTIONS */
-static uint64_t __default_hash(const char *key);
+uint64_t __default_hash(const char *key);
 static int __get_index(SimpleSet *set, const char *key, uint64_t hash, uint64_t *index);
 static int __assign_node(SimpleSet *set, const char *key, uint64_t hash, uint64_t index);
 static void __free_index(SimpleSet *set, uint64_t index);
@@ -40,7 +40,7 @@ int set_init_alt(SimpleSet *set, uint64_t num_els, set_hash_function hash) {
         set->nodes[i] = NULL;
     }
     set->used_nodes = 0;
-    set->hash_function = (hash == NULL) ? &__default_hash : hash;
+    set->hash_function = &__default_hash;
     return SET_TRUE;
 }
 
@@ -65,17 +65,19 @@ int set_destroy(SimpleSet *set) {
 }
 
 int set_add(SimpleSet *set, const char *key) {
-    uint64_t hash = set->hash_function(key);
+    uint64_t hash = __default_hash(key);
     return __set_add(set, key, hash);
 }
 
 int set_contains(SimpleSet *set, const char *key) {
-    uint64_t index, hash = set->hash_function(key);
+	printf("we got here\n");
+    uint64_t index, hash = __default_hash(key);
+	printf("we got nowehere\n");
     return __get_index(set, key, hash, &index);
 }
 
 int set_remove(SimpleSet *set, const char *key) {
-    uint64_t index, hash = set->hash_function(key);
+    uint64_t index, hash = __default_hash(key);
     int pos = __get_index(set, key, hash, &index);
     if (pos != SET_TRUE) {
         return pos;
@@ -225,10 +227,12 @@ int set_cmp(SimpleSet *left, SimpleSet *right) {
 /*******************************************************************************
 ***        PRIVATE FUNCTIONS
 *******************************************************************************/
-static uint64_t __default_hash(const char *key) {
+uint64_t __default_hash(const char *key) {
     // FNV-1a hash (http://www.isthe.com/chongo/tech/comp/fnv/)
+	printf("los alge3\n");
     size_t i, len = strlen(key);
     uint64_t h = 14695981039346656037ULL; // FNV_OFFSET 64 bit
+	printf("los alaoma\n");
     for (i = 0; i < len; ++i) {
         h = h ^ (unsigned char) key[i];
         h = h * 1099511628211ULL; // FNV_PRIME 64 bit
@@ -236,7 +240,7 @@ static uint64_t __default_hash(const char *key) {
     return h;
 }
 
-static int __set_contains(SimpleSet *set, const char *key, uint64_t hash) {
+int __set_contains(SimpleSet *set, const char *key, uint64_t hash) {
     uint64_t index;
     return __get_index(set, key, hash, &index);
 }
@@ -272,11 +276,13 @@ static int __set_add(SimpleSet *set, const char *key, uint64_t hash) {
     return res;
 }
 
-static int __get_index(SimpleSet *set, const char *key, uint64_t hash, uint64_t *index) {
+int __get_index(SimpleSet *set, const char *key, uint64_t hash, uint64_t *index) {
     uint64_t i, idx;
+	printf("we got to las vegas\n");
     idx = hash % set->number_nodes;
     i = idx;
     size_t len = strlen(key);
+	printf("we got there\n");
     while (1) {
         if (set->nodes[i] == NULL) {
             *index = i;

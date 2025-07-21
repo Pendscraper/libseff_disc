@@ -20,7 +20,6 @@
 #ifndef SEFF_H
 #define SEFF_H
 
-#include "seff_types.h"
 #include <assert.h>
 #include <stdbool.h>
 #include <stddef.h>
@@ -29,6 +28,7 @@
 #include <string.h>
 
 #include "set.h"
+#include "seff_types.h"
 
 #ifdef __cplusplus
 #define E extern "C"
@@ -106,25 +106,23 @@ E __attribute__((noreturn)) void seff_throw(effect_id eff_id, void *payload);
 #define EFF_RET_T(name) __##name##_eff_ret
 #define EFF_DEF_HANDLER(name) __##name##_eff_def_handler
 #define _HANDLES_BASE(...) ({effect_id _____ef[] = {__VA_ARGS__}; 					\
-				SimpleSet _____efs; 							\
-				set_init(&_____efs);							\
-				for (int _____eff_i = 0; _____eff_i < sizeof(_____ef); _____eff_i++) { 	\
-					char buff[sizeof(effect_id) / sizeof(char) + 1];		\
+				SimpleSet *_____efs = malloc(sizeof(SimpleSet)); 							\
+				printf("half\n");\
+				set_init(_____efs);							\
+				printf("thirds\n");\
+				printf("size: %lu %lu\n", sizeof(_____ef), sizeof(_____ef) / sizeof(effect_id));\
+				for (int _____eff_i = 0; _____eff_i < sizeof(_____ef) / sizeof(effect_id); _____eff_i++) { 	\
+					printf("%lu\n", _____ef[_____eff_i]);\
+					char *buff = malloc(128 * sizeof(char));					\
+					printf("gh--\n");\
 					sprintf(buff, "%lu", _____ef[_____eff_i]);				\
-					set_add(&_____efs, buff);					\
+					printf("haar %s\n", buff);\
+					set_add(_____efs, buff);					\
 				}									\
+				printf("whole\n");\
 				(effect_set)_____ef;})
 #define HANDLES(...) _HANDLES_BASE(__VA_ARGS__)
-#define HANDLES_TOPLEVEL(varname, ...) effect_id ____##varname##_ef[] = {__VA_ARGS__}; 					\
-					SimpleSet ____##varname##_efs; 							\
-					set_init(&____##varname##_efs);							\
-					for (int ____##varname##_eff_i = 0; ____##varname##_eff_i < sizeof(____##varname##_ef); ____##varname##_eff_i++) { 	\
-						char buff[sizeof(effect_id) / sizeof(char) + 1];			\
-						sprintf(buff, "%lu", ____##varname##_ef[i]);				\
-						set_add(&____##varname##_efs, buff);					\
-					}										\
-					effect_set varname = ____##varname##_efs;
-					
+E effect_set __make_effect_set(effect_id *ids, size_t count);
 
 #define HANDLES_ALL (effect_set)handles_all_pointer
 #define HANDLES_NONE _HANDLES_BASE(0)
@@ -197,7 +195,7 @@ typedef void EFF_RET_T(return);
 static const effect_id EFF_ID(return) = (effect_id) RETURN_EFFECT_ID;
 typedef void EFF_PAYLOAD_T(return);
 
-static const effect_set _handles_all_set = (effect_id[]){0}; // should never be accessed - this should be detected by a pointer comparison first
+static const effect_set _handles_all_set = (effect_set)(effect_id[]){0}; // should never be accessed - this should be detected by a pointer comparison first
 static const void *handles_all_pointer = (void *)_handles_all_set;
 
 static inline bool seff_finished(seff_request_t req) { return req.effect == EFF_ID(return); }
