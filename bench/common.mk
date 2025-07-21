@@ -35,13 +35,9 @@ FLAGS := ${FLAGS.${BUILD}} -g -Wall -Wunreachable-code -pedantic -pthread \
 	-Wno-zero-length-array \
 	-Wno-unreachable-code-loop-increment
 
-LIBSEFF_OG_LIB_LOC := ${DEPS_DIR}/libseff
-
 LIBSEFF_LINK_LIBS := ${ROOT_DIR}/output/lib/libutils.a ${ROOT_DIR}/output/lib/libseff.a
-LIBSEFF_OG_LINK_LIBS := ${LIBSEFF_OG_LIB_LOC}/output/lib/libutils.a ${LIBSEFF_OG_LIB_LOC}/output/lib/libseff.a
 
 LIBSEFF_INCLUDE_DIRS     := -I${ROOT_DIR}/src -I${ROOT_DIR}/utils -I${ROOT_DIR}/scheduler
-LIBSEFF_OG_INCLUDE_DIRS     := -I${LIBSEFF_OG_LIB_LOC}/src -I${LIBSEFF_OG_LIB_LOC}/utils -I${LIBSEFF_OG_LIB_LOC}/scheduler
 LIBMPROMPT_INCLUDE_DIRS  := -I${DEPS_DIR}/libmprompt/include
 LIBHANDLER_INCLUDE_DIRS  := -I${DEPS_DIR}/libhandler/inc
 CPPCORO_INCLUDE_DIRS     := -I${DEPS_DIR}/cppcoro/include
@@ -51,13 +47,11 @@ PICOHTTP_INCLUDE_DIRS	 := -I${DEPS_DIR}/picohttpparser
 
 CFLAGS            := $(FLAGS) -std=gnu11
 CFLAGS_LIBSEFF    := $(CFLAGS) $(LIBSEFF_INCLUDE_DIRS) -fsplit-stack
-CFLAGS_LIBSEFF_OG := $(CFLAGS) $(LIBSEFF_OG_INCLUDE_DIRS) -fsplit-stack
 CFLAGS_LIBMPROMPT := $(CFLAGS) $(LIBMPROMPT_INCLUDE_DIRS)
 CFLAGS_LIBHANDLER := $(CFLAGS) $(LIBHANDLER_INCLUDE_DIRS)
 
 CXXFLAGS             := $(FLAGS) -stdlib=libc++
 CXXFLAGS_LIBSEFF     := $(CXXFLAGS) -std=c++20 $(LIBSEFF_INCLUDE_DIRS) -fsplit-stack
-CXXFLAGS_LIBSEFF_OG  := $(CXXFLAGS) -std=c++20 $(LIBSEFF_OG_INCLUDE_DIRS) -fsplit-stack
 CXXFLAGS_CPPCORO     := $(CXXFLAGS) -std=c++20 $(CPPCORO_INCLUDE_DIRS)
 # Beware: libco uses the name co_yield, which clashes with C++20's co_yield keyword
 CXXFLAGS_LIBCO       := $(CXXFLAGS) -std=c++17 $(LIBCO_INCLUDE_DIRS)
@@ -65,7 +59,6 @@ CXXFLAGS_CPP-EFFECTS := $(CXXFLAGS) -std=c++20 $(CPP-EFFECTS_INCLUDE_DIRS)
 
 LDFLAGS             :=  -L${ROOT_DIR}/output -fuse-ld=$(LD) -flto=thin
 LDFLAGS_LIBSEFF     := $(LIBSEFF_LINK_LIBS) $(LDFLAGS)
-LDFLAGS_LIBSEFF_OG  := $(LIBSEFF_OG_LINK_LIBS) $(LDFLAGS)
 LDFLAGS_LIBCO       := -L${DEPS_DIR}/libco/lib $(LDFLAGS) -ldl -lcolib
 LDFLAGS_CPPCORO     := -L${DEPS_DIR}/cppcoro/build/ $(LDFLAGS) -lcppcoro
 LDFLAGS_LIBMPROMPT  :=  -L${DEPS_DIR}/libmprompt/out $(LDFLAGS) -lmprompt -lmpeff -lpthread
@@ -123,11 +116,6 @@ $(LIBHANDLER_LIB):
 	$(MAKE) VARIANT=${BUILD} -C ${DEPS_DIR}/libhandler depend
 	$(MAKE) VARIANT=${BUILD} -C ${DEPS_DIR}/libhandler
 	mv ${DEPS_DIR}/libhandler/tmp_config.txt ${DEPS_DIR}/libhandler/out/config.txt
-
-LIBSEFF_OG_LIB := ${LIBSEFF_OG_LIB_LOC}/output/lib/libseff.a
-
-$(LIBSEFF_OG_LIB): ${LIBSEFF_OG_LIB_LOC}/src/seff.c ${LIBSEFF_OG_LIB_LOC}/src/seff.h
-	$(MAKE) BUILD=${BUILD} -C ${LIBSEFF_OG_LIB_LOC} output/lib/libseff.a output/lib/libutils.a
 
 PICOHTTP_LIB := ${DEPS_DIR}/picohttpparser/build/picohttpparser.a
 
