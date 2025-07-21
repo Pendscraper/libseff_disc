@@ -116,7 +116,7 @@ $(LIBHANDLER_CONFIG_NAME):
 	$(MAKE) VARIANT=${BUILD} -C bench/libhandler
 	mv bench/libhandler/tmp_config.txt bench/libhandler/out/config.txt
 
-H_PARAMS := --warmup 3 -N -m 15 --export-json output/results.json --export-csv output/results.csv
+H_PARAMS := --warmup 3 -N -m 15 --export-json output/results.json --export-csv output/results.csv --style=none
 bench_run:
 	$(MAKE) VARIANT=${BUILD} clean
 	$(MAKE) VARIANT=${BUILD} bench
