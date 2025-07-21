@@ -61,7 +61,7 @@ void* tracer(void* arg) {
 		seff_resume(k, NULL, handles);
 	} else {
 		uint64_t times = (uint64_t)PERFORM(effBase, count);
-		volatile seff_coroutine_t *original = NULL;
+		//volatile seff_coroutine_t *original = NULL;
 		for (int i = 0; i < times; i++) {
 			PERFORM(effBase, count);
 		}
@@ -71,8 +71,8 @@ void* tracer(void* arg) {
 
 int main(int argc, char **argv) {
 	if (argc > 3) return 1;
-	uint64_t rotations = (argc >= 2) ? (uint64_t)argv[1] : 10000;
-	uint64_t depth = (argc == 3) ? (uint64_t)argv[2] : 600;
+	uint64_t rotations = (argc >= 2) ? atoi(argv[1]) : 10000;
+	uint64_t depth = (argc == 3) ? atoi(argv[2]) : 600;
     if (rotations == 0) return 2;
     seff_coroutine_t *k = seff_coroutine_new(tracer, (void*)(depth));
     effect_set handler = HANDLES(EFF_ID(effBase));
