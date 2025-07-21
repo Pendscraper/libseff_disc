@@ -23,6 +23,7 @@
 #include "mem/seff_mem.h"
 #include "seff.h"
 #include "seff_types.h"
+#include "set.h"
 
 #ifndef NDEBUG
 #define DEBUG_INFO(fmt, ...) fprintf(stderr, fmt, ##__VA_ARGS__)
@@ -135,13 +136,9 @@ bool seff_find_effect_in(effect_id effect, effect_set handled) {
 	if (handled == NULL) { // this check exists solely because syscall wrappers seem to make the effect set null
 		return false;
 	}
-	int i = 0;
-	while (handled[i] != 0) {
-		if (effect == handled[i++]) {
-			return true;
-		}
-	};
-	return false;
+	char buff[sizeof(effect_id) / sizeof(char) + 1];
+	sprintf(buff, "%lu", effect);
+	return set_contains(&handled, buff);
 }
 
 seff_coroutine_t *seff_locate_handler(effect_id effect) {

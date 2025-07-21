@@ -28,6 +28,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "set.h"
+
 #ifdef __cplusplus
 #define E extern "C"
 #else
@@ -103,9 +105,26 @@ E __attribute__((noreturn)) void seff_throw(effect_id eff_id, void *payload);
 #define EFF_PAYLOAD_T(name) __##name##_eff_payload
 #define EFF_RET_T(name) __##name##_eff_ret
 #define EFF_DEF_HANDLER(name) __##name##_eff_def_handler
-#define _HANDLES_BASE(...) ({static effect_id _____ef[] = {__VA_ARGS__}; (effect_set)_____ef;})
-#define HANDLES(...) _HANDLES_BASE(__VA_ARGS__, 0)
-#define HANDLES_TOPLEVEL(...) (effect_id[]){__VA_ARGS__, 0}
+#define _HANDLES_BASE(...) ({effect_id _____ef[] = {__VA_ARGS__}; 					\
+				SimpleSet _____efs; 							\
+				set_init(&_____efs);							\
+				for (int _____eff_i = 0; _____eff_i < sizeof(_____ef); _____eff_i++) { 	\
+					char buff[sizeof(effect_id) / sizeof(char) + 1];		\
+					sprintf(buff, "%lu", _____ef[_____eff_i]);				\
+					set_add(&_____efs, buff);					\
+				}									\
+				(effect_set)_____ef;})
+#define HANDLES(...) _HANDLES_BASE(__VA_ARGS__)
+#define HANDLES_TOPLEVEL(varname, ...) effect_id ____##varname##_ef[] = {__VA_ARGS__}; 					\
+					SimpleSet ____##varname##_efs; 							\
+					set_init(&____##varname##_efs);							\
+					for (int ____##varname##_eff_i = 0; ____##varname##_eff_i < sizeof(____##varname##_ef); ____##varname##_eff_i++) { 	\
+						char buff[sizeof(effect_id) / sizeof(char) + 1];			\
+						sprintf(buff, "%lu", ____##varname##_ef[i]);				\
+						set_add(&____##varname##_efs, buff);					\
+					}										\
+					effect_set varname = ____##varname##_efs;
+					
 
 #define HANDLES_ALL (effect_set)handles_all_pointer
 #define HANDLES_NONE _HANDLES_BASE(0)

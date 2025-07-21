@@ -17,6 +17,8 @@ from generate import *
 import generate
 import argparse
 
+generate.c_preamble.append('#include "set.h"')
+
 parser = argparse.ArgumentParser()
 
 x86_64 = 'x86-64'
