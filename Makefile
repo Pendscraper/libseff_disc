@@ -108,7 +108,7 @@ test: output/lib/libseff.a output/lib/libutils.a ./tests/*.c
 		$(MAKE) output/$${test%%.*} ; \
 	done
 
-H_PARAMS := --warmup 3 -N -m 15 --export-json output/results.json --export-csv output/results.csv
+H_PARAMS := --warmup 3 -N -m 15 --export-json output/results.json --export-csv output/results.csv --style=none
 bench_run:
 	$(MAKE) VARIANT=${BUILD} clean
 	$(MAKE) VARIANT=${BUILD} bench
