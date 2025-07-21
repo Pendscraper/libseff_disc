@@ -47,7 +47,7 @@ LDFLAGS.vmmem     :=
 LDFLAGS.fixed     :=
 LDFLAGS           := -fuse-ld=$(LD) -L./output ${LDFLAGS.${STACK_POLICY}}
 
-.PHONY: all test bench clean
+.PHONY: all test bench bench_run clean
 
 all: output/lib/libseff.a test bench
 
@@ -116,6 +116,14 @@ $(LIBHANDLER_CONFIG_NAME):
 	$(MAKE) VARIANT=${BUILD} -C bench/libhandler
 	mv bench/libhandler/tmp_config.txt bench/libhandler/out/config.txt
 
+H_PARAMS := --warmup 3 -N -m 15 --export-json output/results.json --export-csv output/results.csv
+bench_run:
+	$(MAKE) VARIANT=${BUILD} clean
+	$(MAKE) VARIANT=${BUILD} bench
+	-rm bench/*_bench/output/*.o
+	hyperfine $(H_PARAMS) 'bench'/*_bench/output/*
+	$(MAKE) VARIANT=${BUILD} -C bench/internet_bench bench
+
 bench: output/lib/libseff.a output/lib/libutils.a
 	for bench_dir in bench/*_bench/ ; do \
 		$(MAKE) BUILD=${BUILD} -C $${bench_dir} all ; \
@@ -147,7 +155,6 @@ clean:
 	rm -rf output
 	rm -f asm/seff_types.S
 	rm -f src/seff_types.h
-	$(MAKE) BUILD=${BUILD} -C bench/libseff clean
 	for bench_dir in bench/*_bench/ ; do \
 		$(MAKE) -C $${bench_dir} clean ; \
 	done
