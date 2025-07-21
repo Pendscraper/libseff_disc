@@ -36,6 +36,8 @@
 *.x86_64
 *.hex
 
+/bench/internet_bench/*/*
+!/bench/internet_bench/*/*.c
 # Debug files
 *.dSYM/
 *.su
