@@ -1,14 +1,23 @@
-LIBSEFF     := /afs/inf.ed.ac.uk/user/s21/s2181033/libseff_old/libseff
+.PHONY: bench clean test build
+all: build
+
+LIBSEFF     := $(CURDIR)/../..
 LIBSEFF_H   := $(LIBSEFF)/src
 LIBSEFF_LIB := $(LIBSEFF)/output/lib
 
+BUILD := debug
+
+FLAGS.debug   := -O0
+FLAGS.release := -O3 -DNDEBUG
+FLAGS         := ${FLAGS.${BUILD}}
+
 CC               := clang-14
-CC_COMPILE_FLAGS := -std=gnu99 -O3 -I$(LIBSEFF_H) -fsplit-stack
+CC_COMPILE_FLAGS := -std=gnu99 ${FLAGS} -I$(LIBSEFF_H) -fsplit-stack
 CC_WARN_FLAGS    := -Wall -Wextra \
 									  -Wformat=2 -Wno-unused-parameter -Wshadow \
 										-Wwrite-strings -Wstrict-prototypes -Wold-style-definition \
 										-Wredundant-decls -Wnested-externs -Wmissing-include-dirs
-CC_LINK_FLAGS    := -std=gnu99 -O3
+CC_LINK_FLAGS    := -std=gnu99 ${FLAGS}
 
 LD         := $(shell which ld.gold)
 LD_FLAGS   := -fuse-ld=$(LD) -l:libseff.a -l:libutils.a -L$(LIBSEFF_LIB)
@@ -19,7 +28,7 @@ build_cmd   = cd $(1) ; $(call compile_cmd, $(1)); $(call link_cmd, $(1))
 test_cmd    = cd $(1) ; ./main $(2) > actual ; echo $(3) > expected ; diff expected actual
 
 bench: build
-	hyperfine --export-csv results.csv \
+	hyperfine --export-csv results.csv --export-json results.json \
 					'./countdown/main 200000000' \
 					'./fibonacci_recursive/main 42' \
 					'./product_early/main 100000' \
