@@ -6,7 +6,9 @@ BUILD = release
 
 LIBSEFF_OLD     := ../../bench/libseff
 LIBSEFF_OLD_H   := $(LIBSEFF_OLD)/src
-LIBSEFF_OLD_LIB := $(LIBSEFF_OLD)/utput/lib
+LIBSEFF_OLD_LIB := $(LIBSEFF_OLD)/output/lib
+
+LIBSEFF_GOAT := ../../bench/libseff_goat
 
 NEW_BENCH_LOC := libseff_bench_from_internet
 OLD_BENCH_LOC := libseff_bench_old
@@ -41,18 +43,15 @@ bench:
 	$(MAKE) BUILD=${BUILD} -C $(LIBSEFF) bench
 	$(MAKE) BUILD=${BUILD} -C $(LIBSEFF_OLD) clean
 	$(MAKE) BUILD=${BUILD} -C $(LIBSEFF_OLD) bench
-	-rm $(LIBSEFF)/bench/ad_bench/output/*.o
-	-rm $(LIBSEFF)/bench/chameneos_bench/output/*.o
-	-rm $(LIBSEFF)/bench/skynet_bench/output/*.o
-	-rm $(LIBSEFF_OLD)/bench/ad_bench/output/*.o
-	-rm $(LIBSEFF_OLD)/bench/chameneos_bench/output/*.o
-	-rm $(LIBSEFF_OLD)/bench/skynet_bench/output/*.o
-	-rm $(LIBSEFF)/bench/chameneos_bench/output/*
-	-rm $(LIBSEFF_OLD)/bench/chameneos_bench/output/*
+	$(MAKE) BUILD=${BUILD} -C $(LIBSEFF_GOAT) clean
+	$(MAKE) BUILD=${BUILD} -C $(LIBSEFF_GOAT) bench
+	-rm $(LIBSEFF)/bench/*_bench/output/*.o
+	-rm $(LIBSEFF_OLD)/bench/*_bench/output/*.o
+	-rm $(LIBSEFF_GOAT)/bench/*_bench/output/*.o
 	hyperfine --warmup 3 -N -m 20 --export-json resultsNew.json --export-csv resultsNew.csv \
-					'$(LIBSEFF_OLD)/bench'/*_bench/output/* \
-					'$(LIBSEFF)/bench'/*_bench/output/* \
-					'$(LIBSEFF)/bench/handler_stack_bench/output_old'/*
+					'$(LIBSEFF_GOAT)/bench'/*_bench/output/* 		\
+					'$(LIBSEFF)/bench'/*_bench/output/* 			\
+					'$(LIBSEFF_OLD)/bench'/*_bench/output/*
 nuh:
 	hyperfine -N -m 50 --warmup 5 --export-csv results67.csv \
 					'$(NEW_BENCH_LOC)/countdown/main 200000000' \
