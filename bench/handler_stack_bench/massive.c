@@ -8,7 +8,7 @@ DEFINE_EFFECT(effBase, void*, {uint64_t count; });
 static int width;
 
 void* tracer(void* arg) {
-	effect_id *handles = malloc(width * sizeof(effect_id) + 1);
+	effect_id *handles = malloc((width + 1) * sizeof(effect_id));
 	for (int i = 0; i < width; i++) {
 		handles[i] = (effect_id)malloc(sizeof(char));
 	}
