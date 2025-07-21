@@ -10,8 +10,8 @@ DEFINE_EFFECT(stop, void, {});
 
 #define NEWLINE 10
 #define DOLLAR 36
-inline bool is_newline(char c) { return (int) c == NEWLINE; }
-inline bool is_dollar(char c) { return (int) c == DOLLAR; }
+static inline bool is_newline(char c) { return (int) c == NEWLINE; }
+static inline bool is_dollar(char c) { return (int) c == DOLLAR; }
 
 static void* parse(void* parameter) {
   int64_t a = 0;
