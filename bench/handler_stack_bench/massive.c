@@ -3,14 +3,19 @@
 
 #include <stdio.h>
 
-DEFINE_EFFECT(effBase, 0, void*, {uint64_t count; });
+DEFINE_EFFECT(effBase, void*, {uint64_t count; });
 
-DEFINE_EFFECT(effIntermediate01, 1, void *, {});
+static int width;
 
 void* tracer(void* arg) {
+	effect_id *handles = malloc((width + 1) * sizeof(effect_id));
+	handles[0] = width;
+	for (int i = 1; i <= width; i++) {
+		handles[i] = (effect_id)malloc(sizeof(char));
+	}
+
 	uint64_t count = (uint64_t)arg;
 	if (count > 0) {
-		effect_set handles = HANDLES(effIntermediate01);
 		seff_coroutine_t *k = seff_coroutine_new(tracer, (void*)(count - 1));
 		seff_resume(k, NULL, handles);
 	} else {
@@ -25,11 +30,13 @@ void* tracer(void* arg) {
 }
 
 int main(int argc, char **argv) {
-	if (argc > 3) return 1;
-	uint64_t rotations = (argc >= 2) ? (uint64_t)argv[1] : 10000;
-	uint64_t depth = (argc == 3) ? (uint64_t)argv[2] : 600;
+    if (argc > 4) return 1;
+    uint64_t rotations = (argc >= 2) ? atoi(argv[1]) : 10000;
+    uint64_t depth = (argc >= 3) ? atoi(argv[2]) : 600;
+    width = (argc >= 4) ? atoi(argv[3]) : 350;
+
     seff_coroutine_t *k = seff_coroutine_new(tracer, (void*)(depth));
-    effect_set handler = HANDLES(effBase);
+    effect_set handler = HANDLES(EFF_ID(effBase));
     seff_resume(k, NULL, handler);
     seff_resume(k, (void*)rotations, handler);
     return 0;
