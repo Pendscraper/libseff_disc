@@ -1,4 +1,4 @@
-all: output/wide output/thin output/mid output/real
+all: output/wide output/thin output/mid output/real output/massive
 
 include ../common.mk
 
