@@ -71,9 +71,13 @@ else:
     print(f'Fatal error: unsupported effect ID generation policy {id_policy}')
 
 
-
-effect_id = Typedef('effect_id', arch.word_type)
+default_handler = Typedef("default_handler_t", func([ptr(void)], ptr(void)))
+effect_id = Typedef('effect_id', ptr(default_handler.ty))
 effect_set = Typedef("effect_set", ptr(effect_id.ty))
+
+genname = "effect_id_generative_cell"
+pt = ptr(unsized_named_ty("struct _" + genname))
+gen_effect_set_cell = Struct(genname, Field("previous", pt), Field("handler", ptr(default_handler.ty)), Field("next", pt))
 
 eff = Struct('seff_request_t',
     Field('effect', effect_id.ty),

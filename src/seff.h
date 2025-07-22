@@ -57,7 +57,6 @@ E __attribute__((no_split_stack)) seff_request_t seff_resume(
     seff_coroutine_t *k, void *arg, effect_set handled);
 E seff_request_t seff_resume_handling_all(seff_coroutine_t *k, void *arg);
 
-typedef void *(default_handler_t)(void *);
 E default_handler_t *seff_set_default_handler(effect_id effect, default_handler_t *handler);
 E default_handler_t *seff_get_default_handler(effect_id effect);
 
@@ -81,6 +80,11 @@ static inline void *seff_perform(effect_id eff_id, void *payload) {
 E __attribute__((noreturn, no_split_stack)) void seff_exit(
     seff_coroutine_t *k, effect_id eff_id, void *payload);
 E __attribute__((noreturn)) void seff_throw(effect_id eff_id, void *payload);
+
+extern effect_id_generative_cell *_seff_generated_ids;
+
+E effect_id seff_alloc_gen_id(void);
+E void seff_dealloc_gen_id(effect_id);
 
 // TODO: this is architecture specific
 #define MAKE_SYSCALL_WRAPPER(ret, fn, ...)                                                        \
@@ -166,6 +170,13 @@ effect_id _get_new_id() {
 	return _id_counter_libseff_internal++;
 }
 #endif
+
+#define DEFINE_EFFECT_LOCAL(name, block) {effect_id name = seff_alloc_gen_id();		\
+					 while (0) {					\
+						block;					\
+					 }						\
+					 seff_dealloc_gen_id(name);			\
+					}
 
 #define DEFINE_EFFECT(name, ret_val, payload)          												\
     typedef ret_val EFF_RET_T(name);                       											\
