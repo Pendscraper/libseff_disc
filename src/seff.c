@@ -32,6 +32,9 @@
 
 extern __thread seff_coroutine_t *_seff_current_coroutine;
 
+effect_id_generative_cell __seff_starting_struct = {NULL, NULL, NULL};
+effect_id_generative_cell *_seff_generated_ids = &__seff_starting_struct;
+
 seff_request_t seff_resume_handling_all(seff_coroutine_t *k, void *arg) {
     return seff_resume(k, arg, HANDLES_ALL);
 }
@@ -162,6 +165,33 @@ default_handler_t *seff_set_default_handler(effect_id effect, default_handler_t 
 }
 
 default_handler_t *seff_get_default_handler(effect_id effect) { return *((default_handler_t **)effect); }
+
+effect_id seff_alloc_gen_id(void) {
+	effect_id_generative_cell *newcell = malloc(sizeof(effect_id_generative_cell));
+	newcell -> previous = NULL;
+	newcell -> handler = NULL;
+	newcell -> next = _seff_generated_ids;
+	_seff_generated_ids -> previous = newcell;
+	_seff_generated_ids = newcell;
+	return (effect_id)newcell;
+}
+
+void seff_dealloc_gen_id(effect_id id) {
+	effect_id_generative_cell *remcell = (effect_id_generative_cell *)id;
+	effect_id_generative_cell *back = remcell -> previous;
+	effect_id_generative_cell *forward = remcell -> next;
+	if (forward != NULL) {
+		forward -> previous = back;
+	}
+	if (back != NULL) {
+		back -> next = forward;
+	} else {
+		_seff_generated_ids = forward;
+	}
+	// do we dealloc the default handler here? naah
+	free(remcell);
+	return;
+}
 
 void seff_throw(effect_id eff_id, void *payload) {
     // The state code is set by seff_exit

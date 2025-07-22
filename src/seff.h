@@ -57,7 +57,6 @@ E __attribute__((no_split_stack)) seff_request_t seff_resume(
     seff_coroutine_t *k, void *arg, effect_set handled);
 E seff_request_t seff_resume_handling_all(seff_coroutine_t *k, void *arg);
 
-typedef void *(default_handler_t)(void *);
 E default_handler_t *seff_set_default_handler(effect_id effect, default_handler_t *handler);
 E default_handler_t *seff_get_default_handler(effect_id effect);
 
@@ -82,6 +81,11 @@ E __attribute__((noreturn, no_split_stack)) void seff_exit(
     seff_coroutine_t *k, effect_id eff_id, void *payload);
 E __attribute__((noreturn)) void seff_throw(effect_id eff_id, void *payload);
 
+extern effect_id_generative_cell *_seff_generated_ids;
+
+E effect_id seff_alloc_gen_id(void);
+E void seff_dealloc_gen_id(effect_id);
+
 // TODO: this is architecture specific
 #define MAKE_SYSCALL_WRAPPER(ret, fn, ...)                                                        \
     ret __attribute__((no_split_stack)) fn##_syscall_wrapper(__VA_ARGS__);                        \
@@ -103,7 +107,7 @@ E __attribute__((noreturn)) void seff_throw(effect_id eff_id, void *payload);
 #define EFF_PAYLOAD_T(name) __##name##_eff_payload
 #define EFF_RET_T(name) __##name##_eff_ret
 #define EFF_DEF_HANDLER(name) __##name##_eff_def_handler
-#define HANDLES(...) (effect_id[]){(uint64_t)(sizeof((effect_id[]){__VA_ARGS__})/sizeof(effect_id)), __VA_ARGS__}
+#define HANDLES(...) (effect_id[]){(void *)(sizeof((effect_id[]){__VA_ARGS__})/sizeof(effect_id)), __VA_ARGS__}
 #define HANDLES_TOPLEVEL(...) HANDLES(__VA_ARGS__)
 
 #define HANDLES_ALL (effect_set)handles_all_pointer
@@ -165,6 +169,20 @@ effect_id _get_new_id() {
 	return _id_counter_libseff_internal++;
 }
 #endif
+
+
+#define DEFINE_LOCAL_EFFECT(name)					\
+	effect_id EFF_ID(name) = seff_alloc_gen_id();			\
+	default_handler_t *EFF_DEF_HANDLER(name) = *EFF_ID(name);
+
+#define UNDEF_LOCAL_EFFECT(name) seff_dealloc_gen_id(EFF_ID(name));
+
+#define DEFINE_LOCAL_EFFECT_IN(name, block) {DEFINE_EFFECT_LOCAL(name)				\
+					 	do {						\
+							block;					\
+					 	} while (0);					\
+					 	UNDEF_EFFECT_LOCAL(name)			\
+					    }
 
 #define DEFINE_EFFECT(name, ret_val, payload)          												\
     typedef ret_val EFF_RET_T(name);                       											\
