@@ -171,12 +171,19 @@ effect_id _get_new_id() {
 }
 #endif
 
-#define DEFINE_EFFECT_LOCAL(name, block) {effect_id name = seff_alloc_gen_id();		\
-					 while (0) {					\
-						block;					\
-					 }						\
-					 seff_dealloc_gen_id(name);			\
-					}
+
+#define DEFINE_LOCAL_EFFECT(name)					\
+	effect_id EFF_ID(name) = seff_alloc_gen_id();			\
+	default_handler_t *EFF_DEF_HANDLER(name) = *EFF_ID(name);
+
+#define UNDEF_LOCAL_EFFECT(name) seff_dealloc_gen_id(EFF_ID(name));
+
+#define DEFINE_LOCAL_EFFECT_IN(name, block) {DEFINE_EFFECT_LOCAL(name)				\
+					 	do {						\
+							block;					\
+					 	} while (0);					\
+					 	UNDEF_EFFECT_LOCAL(name)			\
+					    }
 
 #define DEFINE_EFFECT(name, ret_val, payload)          												\
     typedef ret_val EFF_RET_T(name);                       											\

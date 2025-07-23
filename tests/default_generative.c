@@ -4,11 +4,12 @@
 #include <assert.h>
 #include <stdio.h>
 
-DEFINE_EFFECT(division_by_zero, void, { int dividend; });
+static effect_id division_by_zero_id;
+static bool shouldnt_crash = true;
 
 int safe_division(int dividend, int divisor) {
     if (divisor == 0) {
-        THROW(division_by_zero, dividend);
+        seff_throw(division_by_zero_id, (void *)dividend);
     }
     return dividend / divisor;
 }
@@ -21,34 +22,33 @@ void *safe_computation(void *_arg) {
 }
 
 void *div_by_zero_crash(void *arg) {
-    EFF_PAYLOAD_T(division_by_zero) payload = *(EFF_PAYLOAD_T(division_by_zero) *)arg;
-    fprintf(stderr, "ERROR: dividing %d by zero\n", payload.dividend);
-    exit(0);
+    fprintf(stderr, "ERROR: dividing %d by zero\n", (int)arg);
+    exit(shouldnt_crash);
 }
-
-static bool shouldnt_crash = true;
 
 extern size_t default_frame_size;
 int main(void) {
     puts("hi");
+    DEFINE_LOCAL_EFFECT(division_by_zero);
+    division_by_zero_id = EFF_ID(division_by_zero);
+
     seff_set_default_handler(EFF_ID(division_by_zero), div_by_zero_crash);
     seff_coroutine_t k;
     seff_coroutine_init(&k, safe_computation, NULL);
     
     puts("startup safe");
+    effect_set handled = (effect_id[]){0, 0};
+    handled[0] = EFF_ID(division_by_zero);
 
-    seff_request_t exn = seff_resume(&k, NULL, HANDLES(EFF_ID(division_by_zero)));
-    CASE_SWITCH(exn, {
-        CASE_EFFECT(division_by_zero, {
-            printf("Caught division (%d / 0) in coroutine, continuing main\n", payload.dividend);
-            break;
-        });
-		CASE_DEFAULT(
-		    assert(false);
-        )
-    })
+    seff_request_t exn = seff_resume(&k, NULL, handled);
+
+    if (exn.effect == EFF_ID(division_by_zero)) {
+	printf("Caught division (%d / 0) in coroutine, continuing main\n", (int)exn.payload);
+    }
+
     shouldnt_crash = false;
     seff_coroutine_release(&k);
     safe_division(100, 0);
+    UNDEF_LOCAL_EFFECT(division_by_zero);
     return 1;
 }
