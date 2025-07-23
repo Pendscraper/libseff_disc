@@ -9,15 +9,15 @@ static int width;
 
 void* tracer(void* arg) {
 	effect_id *handles = malloc((width + 1) * sizeof(effect_id));
-	handles[0] = (void *)width;
-	for (int i = 1; i <= width; i++) {
+	for (int i = 0; i < width; i++) {
 		handles[i] = (effect_id)malloc(sizeof(char));
 	}
+	effect_set handled = {width, handles};
 
 	uint64_t count = (uint64_t)arg;
 	if (count > 0) {
 		seff_coroutine_t *k = seff_coroutine_new(tracer, (void*)(count - 1));
-		seff_resume(k, NULL, handles);
+		seff_resume(k, NULL, handled);
 	} else {
 		uint64_t times = (uint64_t)PERFORM(effBase, count);
 		volatile seff_coroutine_t *original = NULL;

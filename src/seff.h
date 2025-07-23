@@ -107,11 +107,12 @@ E void seff_dealloc_gen_id(effect_id);
 #define EFF_PAYLOAD_T(name) __##name##_eff_payload
 #define EFF_RET_T(name) __##name##_eff_ret
 #define EFF_DEF_HANDLER(name) __##name##_eff_def_handler
-#define HANDLES(...) (effect_id[]){(void *)(sizeof((effect_id[]){__VA_ARGS__})/sizeof(effect_id)), __VA_ARGS__}
+#define _HOW_MANY_ARGS(type, ...) (sizeof((type[]){__VA_ARGS__})/sizeof(type))
+#define HANDLES(...) ((effect_set){_HOW_MANY_ARGS(effect_id, __VA_ARGS__), (effect_id[]){__VA_ARGS__}})
 #define HANDLES_TOPLEVEL(...) HANDLES(__VA_ARGS__)
 
-#define HANDLES_ALL (effect_set)handles_all_pointer
-#define HANDLES_NONE (effect_id[]){0}
+#define HANDLES_ALL _handles_all_set
+#define HANDLES_NONE ((effect_set){0, NULL})
 
 #define ALLOC_NEW_STATIC_ID() ({static effect_id _____id = &_____id; _____id;})
 
@@ -195,8 +196,7 @@ typedef void EFF_RET_T(return);
 static const effect_id EFF_ID(return) = (effect_id) RETURN_EFFECT_ID;
 typedef void EFF_PAYLOAD_T(return);
 
-static const effect_set _handles_all_set = (effect_id[]){0}; // should never be accessed - this should be detected by a pointer comparison first
-static const void *handles_all_pointer = (void *)_handles_all_set;
+static const effect_set _handles_all_set = {-1, NULL}; // we do a little lying
 
 static inline bool seff_finished(seff_request_t req) { return req.effect == EFF_ID(return); }
 

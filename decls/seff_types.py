@@ -73,7 +73,10 @@ else:
 
 default_handler = Typedef("default_handler_t", func([ptr(void)], ptr(void)))
 effect_id = Typedef('effect_id', ptr(default_handler.ty))
-effect_set = Typedef("effect_set", ptr(effect_id.ty))
+effect_set = Struct('effect_set',
+	Field('length', arch.size_t),
+	Field('effects', ptr(effect_id.ty))
+)
 
 genname = "effect_id_generative_cell"
 pt = ptr(unsized_named_ty("struct _" + genname))

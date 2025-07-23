@@ -55,7 +55,6 @@ int main(void) {
 
 	printf("Players initialised\n");
 	effect_set handled = HANDLES(EFF_ID(end_turn));
-	printf("Handler values: %lu %lu\n", handled[0], handled[1]);
 	
 	while (true) {
     	seff_request_t request = seff_resume(players[currentPlayer], NULL, handled);

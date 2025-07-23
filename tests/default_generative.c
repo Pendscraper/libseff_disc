@@ -15,6 +15,7 @@ int safe_division(int dividend, int divisor) {
 }
 
 void *safe_computation(void *_arg) {
+	printf("resumed\n");
     for (int i = -5; i < 5; i++) {
         safe_division(100, i);
     }
@@ -37,8 +38,8 @@ int main(void) {
     seff_coroutine_init(&k, safe_computation, NULL);
     
     puts("startup safe");
-    effect_set handled = (effect_id[]){(void *)1, 0};
-    handled[1] = EFF_ID(division_by_zero);
+    effect_set handled = HANDLES(EFF_ID(division_by_zero));
+	printf("leng: %d, first: %lu, addr: %p\n", handled.length, handled.effects[0], handled.effects);
 
     seff_request_t exn = seff_resume(&k, NULL, handled);
 

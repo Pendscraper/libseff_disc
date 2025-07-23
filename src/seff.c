@@ -132,15 +132,18 @@ bool seff_coroutine_init_sized(
 }
 
 bool seff_find_effect_in(effect_id effect, effect_set handled) {
-	if (handled == HANDLES_ALL) {
+	if (handled.length == -1) { // this means it handles all!
 		return true;
 	}
-	if (handled == NULL) { // this check exists solely because syscall wrappers seem to make the effect set null
-		return false;
-	}
-	for (int i = 1; i <= handled[0]; i++) {
-		if (handled[i] == effect)
+	for (int i = 0; i < handled.length; i++) {
+		printf("yuppers\n");
+		printf("len: %d\n", handled.length);
+		printf("comping: %lu\n", effect);
+		printf("addr: %p\n", handled.effects);
+		if (handled.effects[i] == effect) {
+			printf("duppers\n");
 			return true;
+		}
 	}
 	return false;
 }
