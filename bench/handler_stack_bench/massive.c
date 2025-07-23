@@ -9,7 +9,7 @@ static int width;
 
 void* tracer(void* arg) {
 	effect_id *handles = malloc((width + 1) * sizeof(effect_id));
-	handles[0] = width;
+	handles[0] = (void *)width;
 	for (int i = 1; i <= width; i++) {
 		handles[i] = (effect_id)malloc(sizeof(char));
 	}

@@ -9,17 +9,11 @@ static int width;
 
 void* tracer(void* arg) {
 	effect_id *handles = malloc((width + 1) * sizeof(effect_id));
-<<<<<<< HEAD
-	handles[0] = width;
+
+	handles[0] = (void *)width;
 	for (int i = 1; i <= width; i++) {
 		handles[i] = seff_alloc_gen_id();
 	}
-=======
-	for (int i = 0; i < width; i++) {
-		handles[i] = seff_alloc_gen_id();
-	}
-	handles[width] = 0;
->>>>>>> b00c283 (added generative effects)
 
 	uint64_t count = (uint64_t)arg;
 	if (count > 0) {
@@ -33,11 +27,7 @@ void* tracer(void* arg) {
 		}
 		printf("%p found %d times\n", (void*)original, (int)times);
 	}
-<<<<<<< HEAD
 	for (int i = 1; i <= width; i++) {
-=======
-	for (int i = 0; i < width; i++) {
->>>>>>> b00c283 (added generative effects)
 		seff_dealloc_gen_id(handles[i]);
 	}
 	free(handles);
