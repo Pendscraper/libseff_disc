@@ -27,6 +27,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdarg.h>
 
 #ifdef __cplusplus
 #define E extern "C"
@@ -86,6 +87,7 @@ extern effect_id_generative_cell *_seff_generated_ids;
 E effect_id seff_alloc_gen_id(void);
 E void seff_dealloc_gen_id(effect_id);
 
+
 // TODO: this is architecture specific
 #define MAKE_SYSCALL_WRAPPER(ret, fn, ...)                                                        \
     ret __attribute__((no_split_stack)) fn##_syscall_wrapper(__VA_ARGS__);                        \
@@ -108,8 +110,12 @@ E void seff_dealloc_gen_id(effect_id);
 #define EFF_RET_T(name) __##name##_eff_ret
 #define EFF_DEF_HANDLER(name) __##name##_eff_def_handler
 #define _HOW_MANY_ARGS(type, ...) (sizeof((type[]){__VA_ARGS__})/sizeof(type))
-#define HANDLES(...) ((effect_set){_HOW_MANY_ARGS(effect_id, __VA_ARGS__), (effect_id[]){__VA_ARGS__}})
-#define HANDLES_TOPLEVEL(...) HANDLES(__VA_ARGS__)
+#define HANDLES(...) ({ 						\
+			effect_id ____seff_list[] = {__VA_ARGS__};	\
+			effect_set ____seff_set = {sizeof(____seff_list), malloc(sizeof(____seff_list) * sizeof(effect_id))};	\
+			memcpy(____seff_set.effects, ____seff_list, sizeof(____seff_list) * sizeof(effect_id));		\
+			____seff_set;})
+#define HANDLES_TOPLEVEL(...) ((effect_set){_HOW_MANY_ARGS(effect_id, __VA_ARGS__), (effect_id[]){__VA_ARGS__}})
 
 #define HANDLES_ALL _handles_all_set
 #define HANDLES_NONE ((effect_set){0, NULL})
