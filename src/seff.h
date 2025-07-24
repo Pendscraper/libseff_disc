@@ -53,8 +53,11 @@ E seff_coroutine_t *seff_current_coroutine(void);
 E __attribute__((no_split_stack)) void *seff_current_stack_top(void);
 #endif
 
-E __attribute__((no_split_stack)) seff_request_t seff_resume(
+E __attribute__((no_split_stack)) seff_request_t seff_resume_unwrapped(
     seff_coroutine_t *k, void *arg, effect_set handled);
+
+E seff_request_t seff_resume(seff_coroutine_t *k, void *arg, effect_set handled);
+
 E seff_request_t seff_resume_handling_all(seff_coroutine_t *k, void *arg);
 
 E default_handler_t *seff_set_default_handler(effect_id effect, default_handler_t *handler);
@@ -107,7 +110,7 @@ E void seff_dealloc_gen_id(effect_id);
 #define EFF_PAYLOAD_T(name) __##name##_eff_payload
 #define EFF_RET_T(name) __##name##_eff_ret
 #define EFF_DEF_HANDLER(name) __##name##_eff_def_handler
-#define HANDLES(...) (effect_id[]){(void *)(sizeof((effect_id[]){__VA_ARGS__})/sizeof(effect_id)), __VA_ARGS__}
+#define HANDLES(...) (effect_id[]){(effect_id)(sizeof((effect_id[]){__VA_ARGS__})/sizeof(effect_id)), __VA_ARGS__}
 #define HANDLES_TOPLEVEL(...) HANDLES(__VA_ARGS__)
 
 #define HANDLES_ALL (effect_set)handles_all_pointer
