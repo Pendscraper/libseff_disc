@@ -155,7 +155,7 @@ bool seff_find_effect_in(effect_id effect, effect_set handled) {
 	size_t len = (size_t)handled[0];
 	int start = 1;
 	int end = len;
-	while (end - start > 1) {
+	while (end - start > 30) {
 		int midpoint = (end + start) / 2;
 		if (effect > handled[midpoint]) {
 			start = midpoint + 1;
