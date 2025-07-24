@@ -35,12 +35,18 @@ extern __thread seff_coroutine_t *_seff_current_coroutine;
 effect_id_generative_cell __seff_starting_struct = {NULL, NULL, NULL};
 effect_id_generative_cell *_seff_generated_ids = &__seff_starting_struct;
 
+int _seff_qsort_func(const void *a, const void *b) {
+	if (a < b) return -1;
+	if (a == b) return 0;
+	return 1;
+}
 seff_request_t seff_resume(seff_coroutine_t *k, void *arg, effect_set handled) {
 	if (handled == NULL) return seff_resume_unwrapped(k, arg, handled);
 	
 	size_t len = (size_t)handled[0];
 	effect_set handled_store = malloc((len + 1) * sizeof(effect_id));
 	memcpy(handled_store, handled, (len + 1) * sizeof(effect_id));
+	qsort(handled + 1, len, sizeof(effect_id), &_seff_qsort_func);
 	return seff_resume_unwrapped(k, arg, handled_store);
 }
 
@@ -147,7 +153,18 @@ bool seff_find_effect_in(effect_id effect, effect_set handled) {
 	if (handled == NULL) { // this check exists solely because syscall wrappers seem to make the effect set null
 		return false;
 	}
-	for (int i = 1; i <= handled[0]; i++) {
+	size_t len = (size_t)handled[0];
+	int start = 1;
+	int end = len;
+	while (end - start > 1) {
+		int midpoint = (end + start) / 2;
+		if (effect > handled[midpoint]) {
+			start = midpoint + 1;
+		} else {
+			end = midpoint;
+		}
+	}
+	for (int i = start; i <= end; i++) {
 		if (handled[i] == effect)
 			return true;
 	}
