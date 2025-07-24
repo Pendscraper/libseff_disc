@@ -124,4 +124,4 @@ ${DEPS_DIR}/picohttpparser/build/picohttpparser.o: ${DEPS_DIR}/picohttpparser/pi
 	$(CC) $(CFLAGS) -o $@ -c $<
 
 $(PICOHTTP_LIB): ${DEPS_DIR}/picohttpparser/build/picohttpparser.o | ${DEPS_DIR}/picohttpparser/build
-	llvm-ar-12 -rcs $@ $<
+	llvm-ar-14 -rcs $@ $<
