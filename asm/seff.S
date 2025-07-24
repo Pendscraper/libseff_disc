@@ -23,12 +23,12 @@
 
 .global seff_exit
 .global seff_yield
-.global seff_resume
+.global seff_resume_unwrapped
 .global coroutine_prelude
 
 .type seff_exit,%function
 .type seff_yield,%function
-.type seff_resume,%function
+.type seff_resume_unwrapped,%function
 .type coroutine_prelude,%function
 
 .global _seff_current_coroutine
@@ -131,8 +131,8 @@ seff_yield:
     .cfi_endproc
 .size seff_yield, . - seff_yield
 
-# void* seff_resume(seff_coroutine_t* k, void* arg, effect_set handled)
-seff_resume:
+# void* seff_resume_unwrapped(seff_coroutine_t* k, void* arg, effect_set handled)
+seff_resume_unwrapped:
     .cfi_startproc
     # k in %rdi
     # arg in %rsi
@@ -183,7 +183,7 @@ seff_resume_after_store_system_stack:
     movq %rsi, %rax
     jmp *%r10
     .cfi_endproc
-.size seff_resume, . - seff_resume
+.size seff_resume_unwrapped, . - seff_resume_unwrapped
 
 # void coroutine_prelude(seff_coroutine_t *k, seff_start_fun_t *fn, void *arg);
 # k in r13
