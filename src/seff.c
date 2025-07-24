@@ -36,16 +36,7 @@ effect_id_generative_cell __seff_starting_struct = {NULL, NULL, NULL};
 effect_id_generative_cell *_seff_generated_ids = &__seff_starting_struct;
 
 seff_request_t seff_resume(seff_coroutine_t *k, void *arg, effect_set handled) {
-	size_t len = 0;
-
-	if (handled == NULL) return seff_resume_unwrapped(k, arg, handled);
-
-	while (handled[len] != NULL) {
-		len++;	
-	} 
-	effect_set handled_store = malloc((len + 1) * sizeof(effect_id));
-	memcpy(handled_store, handled, (len + 1) * sizeof(effect_id));
-	return seff_resume_unwrapped(k, arg, handled_store);
+	return seff_resume_unwrapped(k, arg, handled);
 }
 
 seff_request_t seff_resume_handling_all(seff_coroutine_t *k, void *arg) {
